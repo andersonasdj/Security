@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="../assets/img/favicon.ico">
+	<link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/bootstrap-icons.min.css">
+	<title>Alerta de Segurança — Simulação de Phishing</title>
+	<style>
+		body {
+			background: linear-gradient(135deg, #fff7ed 0%, #fef2f2 100%);
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 1.5rem;
+			font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+		}
+		.painel {
+			max-width: 760px;
+			width: 100%;
+			background: #fff;
+			border-radius: 16px;
+			box-shadow: 0 10px 40px rgba(0,0,0,.08);
+			overflow: hidden;
+		}
+		.painel-cabecalho {
+			background: linear-gradient(135deg, #dc3545 0%, #f59f00 100%);
+			color: #fff;
+			padding: 2rem;
+			text-align: center;
+		}
+		.painel-cabecalho i { font-size: 2.6rem; }
+		.painel-corpo { padding: 2rem; }
+		.dica-card {
+			border: 1px solid #e5e7eb;
+			border-radius: 10px;
+			padding: 1rem 1.25rem;
+			height: 100%;
+		}
+		.dica-card i { font-size: 1.4rem; }
+		.rodape-aviso { font-size: .8rem; color: #6c757d; }
+	</style>
+</head>
+<body>
+	<div class="painel">
+		<div class="painel-cabecalho">
+			<i class="bi bi-shield-exclamation"></i>
+			<h3 class="fw-bold mt-2 mb-1">Você acabou de clicar em um link de phishing simulado</h3>
+			<p class="mb-0">Esta foi uma simulação de conscientização em segurança da informação — nenhuma informação sua foi coletada ou comprometida.</p>
+		</div>
+		<div class="painel-corpo">
+			<p class="lead">
+				Esse exercício faz parte do programa de conscientização em segurança da sua organização.
+				Se este fosse um ataque real, ao clicar você poderia ter exposto suas credenciais ou
+				permitido a instalação de softwares maliciosos.
+			</p>
+			<h5 class="fw-bold mt-4 mb-3"><i class="bi bi-lightbulb me-2 text-warning"></i>Como identificar um e-mail de phishing</h5>
+			<div class="row g-3">
+				<div class="col-md-6">
+					<div class="dica-card">
+						<i class="bi bi-envelope-exclamation text-danger"></i>
+						<h6 class="fw-semibold mt-2">Remetente suspeito</h6>
+						<p class="small text-muted mb-0">Verifique o endereço de e-mail completo, não apenas o nome exibido. Domínios parecidos com o real (ex.: "micros0ft.com") são um sinal de alerta.</p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="dica-card">
+						<i class="bi bi-link-45deg text-danger"></i>
+						<h6 class="fw-semibold mt-2">Links suspeitos</h6>
+						<p class="small text-muted mb-0">Passe o mouse sobre o link antes de clicar e confira se o endereço corresponde ao site oficial esperado.</p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="dica-card">
+						<i class="bi bi-exclamation-octagon text-danger"></i>
+						<h6 class="fw-semibold mt-2">Urgência e pressão</h6>
+						<p class="small text-muted mb-0">Mensagens que pedem ação imediata ("sua conta será bloqueada em 24h") são uma tática comum para induzir erros.</p>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="dica-card">
+						<i class="bi bi-key text-danger"></i>
+						<h6 class="fw-semibold mt-2">Pedidos de dados sensíveis</h6>
+						<p class="small text-muted mb-0">Empresas sérias não solicitam senhas, números de cartão ou códigos de verificação por e-mail.</p>
+					</div>
+				</div>
+			</div>
+			<div class="alert alert-warning d-flex align-items-start gap-2 mt-4 mb-0">
+				<i class="bi bi-info-circle fs-5"></i>
+				<div>
+					<strong>O que fazer ao suspeitar de um e-mail:</strong> não clique em links nem baixe anexos,
+					não responda à mensagem e reporte imediatamente para a equipe de segurança/TI da sua empresa.
+				</div>
+			</div>
+
+			<p class="rodape-aviso mt-4 mb-0 text-center">
+				Esta página faz parte de uma simulação interna de phishing educacional. Em caso de dúvidas, procure a equipe de Segurança da Informação.
+			</p>
+		</div>
+	</div>
+</body>
+</html>

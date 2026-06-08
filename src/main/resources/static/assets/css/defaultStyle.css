@@ -1,0 +1,57 @@
+.navbar-brand {
+    padding-top: var(--bs-navbar-brand-padding-y);
+    padding-bottom: var(--bs-navbar-brand-padding-y);
+    margin-right: var(--bs-navbar-brand-margin-end);
+    font-size: var(--bs-navbar-brand-font-size);
+    color: #05419b !important;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.card { border: 1px solid rgba(121,120,120,.15) !important; box-shadow: 0 2px 8px rgba(0,0,0,.04) !important; }
+body.dark-mode .card { border-color: rgba(255,255,255,.15) !important; box-shadow: 0 3px 14px rgba(0,0,0,.6) !important; }
+
+.navbar {
+    --bs-navbar-brand-font-size: 1.45rem !important;
+    --bs-navbar-hover-color: rgb(0, 0, 0) !important;
+}
+
+.btn-group-sm>.btn, .btn-sm {
+    --bs-btn-border-radius: 0.90rem !important;
+}
+
+@media (max-width: 900px) {
+    body {
+        padding: 0px 0px;
+    }
+}
+
+table {
+  font-family: arial;
+  max-width: 100%;
+  background-color: transparent;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.table th,
+.table td {
+  font-weight: normal;
+  font-size: 14px;
+  padding: 8px 15px;
+  line-height: 20px;
+  text-align: center;
+  vertical-align: middle;
+  border-top: 1px solid #dddddd;
+}
+.table thead th {
+    font-weight: bold;
+    font-size: 14px;
+    color: rgb(250, 250, 250);
+    background: rgb(108, 117, 125);
+}

@@ -1,0 +1,20 @@
+/* ── Cards: dark mode ── */
+body.dark-mode .card { background-color: rgb(61,56,70); color: #f8f9fa; }
+
+/* ── Dark mode: componentes Bootstrap ── */
+body.dark-mode .alert { background-color: #212529; border-color: #444; }
+body.dark-mode .modal-content { background-color: #2c3034; color: #f8f9fa; }
+body.dark-mode .modal-header { background-color: #212529 !important; border-bottom: 1px solid #444 !important; }
+body.dark-mode .modal-header .text-muted,
+body.dark-mode .modal-header small { color: #94a3b8 !important; }
+
+/* ── Responsive ── */
+@media (max-width: 576px) {
+    .row > .col-6.col-md { flex: 0 0 100%; max-width: 100%; }
+    .row > .col-12.col-lg-10,
+    .row > .col-12.col-lg-2 { flex: 0 0 100%; max-width: 100%; }
+    .card { width: 100% !important; }
+}
+
+body.dark-mode .table thead th { color: #94a3b8; border-color: #2d3748; }
+body.dark-mode .table td { border-color: #2d3748; }

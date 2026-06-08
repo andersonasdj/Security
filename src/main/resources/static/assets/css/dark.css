@@ -1,0 +1,448 @@
+/* Estilos para o modo escuro */
+body.dark-mode {
+    background-color: rgb(61, 56, 70);
+    color: #f1f1f1;
+  }
+
+  body.dark-mode .navbar {
+    background-color: rgb(61, 56, 70) !important;
+  }
+
+  body.dark-mode .navbar .nav-link,
+  body.dark-mode .navbar-brand {
+    color: #f1f1f1 !important;
+  }
+
+  body.dark-mode .dropdown-menu {
+    background-color: #2a2a2a;
+    color: #fff;
+  }
+
+  body.dark-mode .dropdown-item {
+    color: #fff;
+  }
+
+  body.dark-mode .dropdown-item:hover {
+    background-color: #444;
+  }
+
+  body.dark-mode footer {
+    background-color: rgb(61, 56, 70);
+    color: #f1f1f1;
+  }
+
+  body.dark-mode .modal-content {
+    background-color: #212529;
+    color: #f8f9fa;
+  }
+
+  body.dark-mode .modal-header,
+  body.dark-mode .modal-footer {
+    border-color: #343a40;
+  }
+
+  body.dark-mode .btn-close {
+    filter: invert(1);
+  }
+
+  body.dark-mode .btn-primary {
+    background-color: #495057;
+    border-color: #6c757d;
+  }
+
+  body.dark-mode .btn-primary:hover {
+    background-color: #343a40;
+    border-color: #495057;
+  }
+
+  body.dark-mode .colorTextBtn {
+      color: rgb(0, 0, 0);
+    }
+
+  /* CARD TOTAL CHAMADOS */
+  body.dark-mode .bg-light {
+      background-color: #2b2b2b !important;
+      border-color: #444 !important;
+  }
+
+  body.dark-mode .bg-light small,
+  body.dark-mode .bg-light strong,
+  body.dark-mode .bg-light span,
+  body.dark-mode .bg-light div {
+      color: #f1f1f1 !important;
+  }
+
+  body.dark-mode .bg-light .text-muted {
+      color: #bdbdbd !important;
+  }
+
+  /* CARDS */
+  body.dark-mode .card-cor,
+  body.dark-mode .card,
+  body.dark-mode .modal-content {
+      background-color: #1e1e1e !important;
+      color: #f1f1f1 !important;
+      border: 1px solid #333 !important;
+  }
+
+  /* TITULOS */
+  body.dark-mode h1,
+  body.dark-mode h2,
+  body.dark-mode h3,
+  body.dark-mode h4,
+  body.dark-mode h5,
+  body.dark-mode h6,
+  body.dark-mode label,
+  body.dark-mode strong {
+      color: #ffffff !important;
+  }
+
+  /* INPUTS */
+  body.dark-mode .form-control,
+  body.dark-mode .form-select,
+  body.dark-mode textarea,
+  body.dark-mode input[type="date"],
+  body.dark-mode input[type="time"] {
+      background-color: #2a2a2a !important;
+      border: 1px solid #444 !important;
+      color: #f1f1f1 !important;
+  }
+
+  /* PLACEHOLDER */
+  body.dark-mode .form-control::placeholder,
+  body.dark-mode textarea::placeholder {
+      color: #9ca3af !important;
+  }
+
+  /* FOCUS */
+  body.dark-mode .form-control:focus,
+  body.dark-mode .form-select:focus {
+      background-color: #2f2f2f !important;
+      color: #ffffff !important;
+      border-color: #0d6efd !important;
+      box-shadow: 0 0 0 .15rem rgba(13,110,253,.25);
+  }
+
+  /* SELECT OPTIONS */
+  body.dark-mode option {
+      background-color: #1e1e1e;
+      color: #ffffff;
+  }
+
+  /* INPUT GROUP */
+  body.dark-mode .input-group-text {
+      background-color: #2b2b2b !important;
+      border-color: #444 !important;
+      color: #f1f1f1 !important;
+  }
+
+  /* TABELAS */
+  body.dark-mode table,
+
+  /* TABLE HEADER */
+  body.dark-mode .table thead {
+      background-color: #2b2b2b !important;
+      color: #ffffff !important;
+  }
+
+  /* DROPDOWN */
+  body.dark-mode .dropdown-menu {
+      background-color: #1e1e1e !important;
+      border: 1px solid #444 !important;
+  }
+
+  body.dark-mode .dropdown-item {
+      color: #f1f1f1 !important;
+  }
+
+  body.dark-mode .dropdown-item:hover {
+      background-color: #2f2f2f !important;
+  }
+  /* =====================================================
+     CLIENTES UI CLEAN
+  ===================================================== */
+  .tabela-card,
+  .filtro-sidebar{
+      border-radius: 18px;
+      overflow: hidden;
+      background: #ffffff;
+  }
+
+  /* SIDEBAR */
+  .filtro-sidebar{
+      position: sticky;
+      top: 20px;
+  }
+
+  .filtro-sidebar .form-label{
+      font-size: .82rem;
+      margin-bottom: 6px;
+  }
+
+  /* TABELA */
+  .tabela-clientes-clean{
+      margin-bottom: 0;
+  }
+
+  .tabela-clientes-clean thead th{
+      border: none !important;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 700;
+      padding: 14px 12px;
+  }
+
+  /* LINHAS */
+  .tabela-clientes-clean tbody tr{
+      border-bottom: 1px solid #edf2f7;
+      transition: .15s ease;
+  }
+
+  .tabela-clientes-clean tbody tr:hover{
+      background: #f8fafc;
+  }
+
+  /* CELULAS */
+  .tabela-clientes-clean td{
+      border: none !important;
+      padding: 14px 12px;
+      vertical-align: middle;
+  }
+
+  /* CLIENTE */
+  .cliente-info{
+      display: flex;
+      flex-direction: column;
+  }
+
+  .cliente-nome{
+      font-size: .92rem;
+      font-weight: 600;
+      color: #111827;
+  }
+
+  /* AÇÕES */
+  .acoes-cliente{
+      text-align: right;
+      white-space: nowrap;
+  }
+
+  .acoes-wrapper{
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+  }
+
+  .btn-action{
+      width: 33px;
+      height: 33px;
+      border-radius: 10px !important;
+      border: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: .15s ease;
+  }
+
+  .btn-action:hover{
+      transform: scale(1.05);
+  }
+
+  /* PAGINAÇÃO */
+  .pagination .page-link{
+      border: none;
+      border-radius: 10px;
+      margin: 0 3px;
+      color: #374151;
+  }
+
+  /* =====================================================
+     DARK MODE
+  ===================================================== */
+  body.dark-mode{
+      background: #111315 !important;
+      color: #f1f5f9 !important;
+  }
+
+  /* CARDS */
+  body.dark-mode .tabela-card,
+  body.dark-mode .filtro-sidebar{
+      background: #181a1d !important;
+      border: 1px solid #2a2d31;
+  }
+
+  /* TABELA */
+  body.dark-mode .tabela-clientes-clean{
+      background: transparent !important;
+  }
+
+  body.dark-mode .tabela-clientes-clean thead th{
+      color: #cbd5e1 !important;
+      border-bottom: 1px solid #2a2d31 !important;
+      background: transparent !important;
+  }
+
+  /* LINHAS */
+  body.dark-mode .tabela-clientes-clean tbody tr{
+      background: transparent !important;
+      border-bottom: 1px solid #23262a !important;
+  }
+
+  body.dark-mode .tabela-clientes-clean tbody tr:hover{
+      background: rgba(255,255,255,.03) !important;
+  }
+
+  /* TEXTOS */
+  body.dark-mode .cliente-nome,
+  body.dark-mode .tabela-clientes-clean td,
+  body.dark-mode .text-muted{
+      color: #f1f5f9 !important;
+  }
+
+  /* INPUTS */
+  body.dark-mode .form-control,
+  body.dark-mode .form-select,
+  body.dark-mode .input-group-text{
+      background: #22252a !important;
+      border-color: #333842 !important;
+      color: #f1f5f9 !important;
+  }
+
+  body.dark-mode .form-control::placeholder{
+      color: #8b949e;
+  }
+
+  /* PAGINAÇÃO */
+  body.dark-mode .pagination .page-link{
+      background: #22252a;
+      border: 1px solid #333842;
+      color: #f1f5f9;
+  }
+
+  body.dark-mode .pagination .page-link:hover{
+      background: #2c3138;
+  }
+
+  /* NAVBAR */
+  body.dark-mode .navbar,
+  body.dark-mode .bg-light{
+      background: #16181b !important;
+  }
+
+  /* MODAIS */
+  body.dark-mode .modal-content{
+      background: #181a1d !important;
+      border: 1px solid #2a2d31;
+  }
+
+  /* DROPDOWN */
+  body.dark-mode .dropdown-menu{
+      background: #1d2125 !important;
+      border-color: #2a2d31 !important;
+  }
+
+  body.dark-mode .dropdown-item{
+      color: #f1f5f9 !important;
+  }
+
+  body.dark-mode .dropdown-item:hover{
+      background: #2c3138 !important;
+  }
+
+  /* FOOTER */
+  body.dark-mode footer{
+      background: #16181b !important;
+  }
+
+  /* NAVBAR */
+  body.dark-mode .navbar,
+  body.dark-mode .bg-light {
+      background-color: #1a1a1a !important;
+      border-color: #333 !important;
+  }
+
+  /* LINKS */
+  body.dark-mode a {
+      color: #7ab7ff;
+  }
+
+  /* BADGES */
+  body.dark-mode .badge.bg-warning {
+      color: #000 !important;
+  }
+
+  /* FOOTER */
+  body.dark-mode footer {
+      background-color: #1a1a1a !important;
+  }
+
+  /* ORIENTAÇÕES LATERAIS */
+  body.dark-mode .position-sticky ul,
+  body.dark-mode .position-sticky p {
+      color: #d1d5db !important;
+  }
+
+  /* ======================================================
+     DARK MODE — CLIENTES LIST
+  ====================================================== */
+  body.dark-mode .modal-content,
+  body.dark-mode .table-responsive {
+      background: #1e1e1e !important;
+      border: 1px solid #333;
+  }
+
+  body.dark-mode .cliente-nome,
+  body.dark-mode .table,
+  body.dark-mode .th-cliente,
+  body.dark-mode .td-cliente {
+      color: #f1f1f1 !important;
+  }
+
+  body.dark-mode .table thead th {
+      color: #9ca3af !important;
+      border-bottom: 1px solid #333 !important;
+  }
+
+  body.dark-mode .pagination .page-link {
+      background: #2a2a2a;
+      color: #f1f1f1;
+  }
+
+  body.dark-mode .pagination .page-link:hover {
+      background: #3a3a3a;
+  }
+
+  body.dark-mode .form-control,
+  body.dark-mode .form-select,
+  body.dark-mode .input-group-text {
+      background: #2a2a2a !important;
+      border-color: #444 !important;
+      color: #f1f1f1 !important;
+  }
+
+  body.dark-mode .form-control::placeholder {
+      color: #9ca3af;
+  }
+
+  body.dark-mode .bg-light,
+  body.dark-mode .navbar {
+      background: #181818 !important;
+  }
+
+  body.dark-mode .dropdown-menu {
+      background: #232323;
+      border-color: #333;
+  }
+
+  body.dark-mode .dropdown-item {
+      color: #f1f1f1;
+  }
+
+  body.dark-mode .dropdown-item:hover {
+      background: #333;
+  }
+
+  body.dark-mode footer {
+      background: #181818;
+  }

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SisTech Login</title>
+    <link rel="shortcut icon" href="assets/img/favicon.ico">
+    <link rel="preload" as="image" href="assets/img/background-login.avif">
+   	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+   	<link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="assets/css/login/style-login.css?v=1.1">
+</head>
+<body>
+<div class="background">
+    <picture>
+        <!-- AVIF -->
+        <source srcset="assets/img/background-login.avif" type="image/avif">
+        <!-- WEBP -->
+        <source srcset="assets/img/background-login.webp" type="image/webp">
+        <!-- FALLBACK -->
+        <img src="assets/img/background-login.webp" alt="Background">
+    </picture>
+</div>
+<div class="overlay"></div>
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <!-- HEADER -->
+        <div class="text-center">
+			<img src="assets/img/login-icon.png" class="logo" alt="SisTech">
+            <p class="login-subtitle">Fortalecendo a Segurança</p>
+        </div>
+        <!-- FORM -->
+        <form method="POST" action="/security/login" id="loginForm">
+            <!-- Usuário -->
+            <div class="mb-4">
+                <label for="username" class="form-label">Usuário</label>
+                <div class="input-wrapper">
+                    <i class="bi bi-person input-icon"></i>
+                    <input type="text" class="form-control" id="username" name="username"
+                        placeholder="Digite seu usuário" autocomplete="username" required>
+                </div>
+            </div>
+            <!-- Senha -->
+            <div class="mb-4">
+                <label for="password" class="form-label">Senha</label>
+                <div class="input-wrapper">
+                    <i class="bi bi-lock input-icon"></i>
+                    <input type="password" class="form-control" id="password" name="password"
+                        placeholder="Digite sua senha" autocomplete="current-password" required>
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- BOTÃO -->
+            <button type="submit" class="btn-login" id="loginBtn">Entrar</button>
+        </form>
+
+        <!-- FOOTER -->
+        <div class="forgot-password">
+            <a href="mailto:suporte@providerone.com.br">Esqueceu sua senha?</a>
+        </div>
+        <div class="copyright">© 2026 TechGold</div>
+    </div>
+</div>
+
+<script defer src="assets/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Mostrar senha
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+
+    togglePassword.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+        passwordInput.type =
+            isPassword
+                ? "text"
+                : "password";
+
+        togglePassword.innerHTML =
+            isPassword
+                ? '<i class="bi bi-eye-slash"></i>'
+                : '<i class="bi bi-eye"></i>';
+    });
+
+    // Loading login
+    document.getElementById("loginForm").addEventListener("submit", () => {
+            const btn = document.getElementById("loginBtn");
+            btn.disabled = true;
+            btn.innerHTML = `
+                <span
+                    class="spinner-border spinner-border-sm me-2">
+                </span>
+                Entrando...
+            `;
+        });
+</script>
+</body>
+</html>

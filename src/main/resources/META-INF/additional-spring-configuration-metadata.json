@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "upload.dir",
+    "type": "java.lang.String",
+    "description": "A description for 'upload.dir'"
+  },
+  {
+    "name": "sistech.security.failedlogin.count",
+    "type": "java.lang.String",
+    "description": "A description for 'sistech.security.failedlogin.count'"
+  },
+  {
+    "name": "sistech.email.copia",
+    "type": "java.lang.String",
+    "description": "A description for 'sistech.email.copia'"
+  },
+  {
+    "name": "sistech.agent.guide.filename",
+    "type": "java.lang.String",
+    "description": "A description for 'sistech.agent.guide.filename'"
+  },
+  {
+    "name": "sistech.phishing.base-url",
+    "type": "java.lang.String",
+    "description": "A description for 'sistech.phishing.base-url'"
+  }
+]}
