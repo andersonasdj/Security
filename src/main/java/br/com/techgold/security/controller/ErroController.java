@@ -23,6 +23,9 @@ public class ErroController implements ErrorController{
 			if(statusCode == HttpStatus.NOT_FOUND.value()) {
 				return "templates/404.html";
 			}
+			else if(statusCode == HttpStatus.FORBIDDEN.value()) {
+				return "templates/403.html";
+			}
 			else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
 				return "templates/500.html";
 			}

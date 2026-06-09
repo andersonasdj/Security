@@ -11,5 +11,7 @@ public record DtoPhishingConfigSmtp(
     String remetenteNome,
     String remetenteEmail,
     boolean usarTls,
-    boolean ativo
+    boolean ativo,
+    int tamanheLote,
+    int intervaloSegundos
 ) {}

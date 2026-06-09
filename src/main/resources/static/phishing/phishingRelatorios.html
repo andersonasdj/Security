@@ -73,6 +73,7 @@
 					<a href="/security/phishing/relatorios" class="sidebar-subitem"><i class="bi bi-bar-chart text-warning"></i>Relatórios</a>
 					<a href="/security/phishing/config" class="sidebar-subitem"><i class="bi bi-gear text-success"></i>Configuração SMTP</a>
 					<a href="/security/phishing/educacional-config" class="sidebar-subitem"><i class="bi bi-palette text-warning"></i>Pág. Educacional</a>
+					<a href="/security/phishing/contatos" class="sidebar-subitem"><i class="bi bi-people text-info"></i>Contatos</a>
 				</div>
 			</div>
 		</div>
@@ -171,6 +172,7 @@
 								<li><hr class="dropdown-divider"></li>
 								<li><a class="dropdown-item" href="/security/phishing/config"><i class="bi bi-gear me-2 text-success"></i>Configuração SMTP</a></li>
 								<li><a class="dropdown-item" href="/security/phishing/educacional-config"><i class="bi bi-palette me-2 text-warning"></i>Pág. Educacional</a></li>
+								<li><a class="dropdown-item" href="/security/phishing/contatos"><i class="bi bi-people me-2 text-info"></i>Contatos</a></li>
 							</ul>
 						</li>				
 					</ul>
@@ -202,9 +204,11 @@
 		<!-- / NAVBAR -->
 
 	<div class="px-2 px-md-3">
-		<div class="mb-3">
-			<h5 class="mb-0 fw-bold"><i class="bi bi-bar-chart me-2 text-warning"></i>Phishing — Relatórios</h5>
-			<small class="text-muted">Acompanhe o desempenho das campanhas de phishing simulado</small>
+		<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+			<div>
+				<h5 class="mb-0 fw-bold"><i class="bi bi-bar-chart me-2 text-warning"></i>Phishing — Relatórios</h5>
+				<small class="text-muted">Acompanhe o desempenho das campanhas de phishing simulado</small>
+			</div>
 		</div>
 		<!-- KPIs -->
 		<div class="row g-2 mb-3">
@@ -250,6 +254,7 @@
 										<th class="text-center">Enviados</th>
 										<th class="text-center">Cliques</th>
 										<th class="text-center">Taxa</th>
+										<th class="text-center">Relatório</th>
 									</tr>
 								</thead>
 								<tbody id="corpoTabelaResumo"></tbody>
@@ -362,6 +367,12 @@
 					<td class="text-center">${c.enviados}</td>
 					<td class="text-center">${c.clicados}</td>
 					<td class="text-center">${c.taxaClique.toFixed(1).replace('.0', '')}%</td>
+					<td class="text-center" onclick="event.stopPropagation()">
+						<a href="/security/phishing/relatorio-executivo?campanha=${c.id}" target="_blank"
+						   class="btn btn-outline-warning btn-sm" title="Abrir relatório executivo">
+							<i class="bi bi-file-earmark-bar-graph"></i>
+						</a>
+					</td>
 				</tr>
 			`);
 		});

@@ -53,6 +53,8 @@ public class PhishingConfigSmtpRestController {
             config.setRemetenteEmail(dados.get("remetenteEmail").toString());
             config.setUsarTls(Boolean.parseBoolean(dados.getOrDefault("usarTls", "true").toString()));
             config.setAtivo(Boolean.parseBoolean(dados.getOrDefault("ativo", "true").toString()));
+            config.setTamanheLote(toInt(dados.getOrDefault("tamanheLote", "10"), 10));
+            config.setIntervaloSegundos(toInt(dados.getOrDefault("intervaloSegundos", "30"), 30));
 
             return ResponseEntity.ok(toDto(configService.salvar(config)));
         } catch (Exception e) {
@@ -78,6 +80,8 @@ public class PhishingConfigSmtpRestController {
             if (dados.containsKey("remetenteEmail")) config.setRemetenteEmail(dados.get("remetenteEmail").toString());
             if (dados.containsKey("usarTls")) config.setUsarTls(Boolean.parseBoolean(dados.get("usarTls").toString()));
             if (dados.containsKey("ativo")) config.setAtivo(Boolean.parseBoolean(dados.get("ativo").toString()));
+            if (dados.containsKey("tamanheLote")) config.setTamanheLote(toInt(dados.get("tamanheLote"), 10));
+            if (dados.containsKey("intervaloSegundos")) config.setIntervaloSegundos(toInt(dados.get("intervaloSegundos"), 30));
             if (dados.containsKey("clienteId")) {
                 Long clienteId = Long.valueOf(dados.get("clienteId").toString());
                 config.setCliente(clienteRepository.getReferenceById(clienteId));
@@ -108,6 +112,13 @@ public class PhishingConfigSmtpRestController {
                 c.getRemetenteNome(),
                 c.getRemetenteEmail(),
                 c.isUsarTls(),
-                c.isAtivo());
+                c.isAtivo(),
+                c.getTamanheLote(),
+                c.getIntervaloSegundos());
+    }
+
+    private int toInt(Object value, int defaultValue) {
+        if (value == null) return defaultValue;
+        try { return Integer.parseInt(value.toString()); } catch (NumberFormatException e) { return defaultValue; }
     }
 }

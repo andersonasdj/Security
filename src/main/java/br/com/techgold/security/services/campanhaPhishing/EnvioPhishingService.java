@@ -46,6 +46,10 @@ public class EnvioPhishingService {
         campanha.setDataInicio(LocalDateTime.now().withNano(0));
         campanhaRepository.save(campanha);
 
+        int tamanheLote = config.getTamanheLote() > 0 ? config.getTamanheLote() : 10;
+        int intervaloSegundos = config.getIntervaloSegundos();
+        int enviadosNoLote = 0;
+
         for (AlvoCampanha alvo : alvoRepository.findByCampanhaId(campanha.getId())) {
             if (alvo.isEnviado()) continue;
             try {
@@ -63,6 +67,12 @@ public class EnvioPhishingService {
                 alvo.setEnviado(true);
                 alvo.setDataEnvio(LocalDateTime.now().withNano(0));
                 alvoRepository.save(alvo);
+                enviadosNoLote++;
+
+                if (intervaloSegundos > 0 && enviadosNoLote >= tamanheLote) {
+                    enviadosNoLote = 0;
+                    try { Thread.sleep(intervaloSegundos * 1000L); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); break; }
+                }
             } catch (Exception e) {
                 System.out.println("[Phishing] Erro ao enviar para " + alvo.getEmail() + ": " + e.getMessage());
             }

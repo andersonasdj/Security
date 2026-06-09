@@ -4,25 +4,218 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" href="assets/img/favicon.ico">
-	<link rel="stylesheet" href="assets/css/defaultStyle.css">
-	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
-	<title>Sistech - ERRO 404</title>
+	<link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
+	<title>Sentinel — Página não encontrada</title>
+	<style>
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+		:root {
+			--navy:   #0f172a;
+			--slate:  #1e293b;
+			--border: rgba(255,255,255,.07);
+			--text:   #f1f5f9;
+			--muted:  #94a3b8;
+			--blue:   #3b82f6;
+			--blue-d: #2563eb;
+		}
+
+		html, body {
+			height: 100%;
+			background: var(--navy);
+			color: var(--text);
+			font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+		}
+
+		body {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			padding: 2rem 1.25rem;
+			text-align: center;
+		}
+
+		/* ── Background grid ── */
+		body::before {
+			content: '';
+			position: fixed; inset: 0; z-index: 0;
+			background-image:
+				linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+			background-size: 48px 48px;
+			pointer-events: none;
+		}
+
+		/* ── Glow ── */
+		body::after {
+			content: '';
+			position: fixed;
+			top: -20%; left: 50%; transform: translateX(-50%);
+			width: 600px; height: 400px;
+			background: radial-gradient(ellipse, rgba(59,130,246,.12) 0%, transparent 70%);
+			pointer-events: none; z-index: 0;
+		}
+
+		.wrapper { position: relative; z-index: 1; max-width: 520px; width: 100%; }
+
+		/* ── Brand ── */
+		.brand {
+			display: inline-flex; align-items: center; gap: .5rem;
+			margin-bottom: 3rem;
+		}
+		.brand-logo {
+			background: #fff;
+			border-radius: 8px;
+			padding: 5px 11px;
+			box-shadow: 0 2px 12px rgba(0,0,0,.4);
+			display: flex; align-items: center;
+		}
+		.brand-logo img { height: 24px; display: block; }
+		.brand-name {
+			font-size: .85rem; font-weight: 700;
+			color: var(--muted); letter-spacing: .04em;
+		}
+
+		/* ── 404 number ── */
+		.error-code {
+			font-size: clamp(6rem, 20vw, 9rem);
+			font-weight: 900;
+			letter-spacing: -.06em;
+			line-height: 1;
+			background: linear-gradient(135deg, #fff 30%, var(--muted) 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			margin-bottom: .5rem;
+			animation: fadeDown .55s ease both;
+		}
+
+		/* ── Icon ── */
+		.error-icon {
+			width: 64px; height: 64px;
+			background: rgba(59,130,246,.1);
+			border: 1px solid rgba(59,130,246,.2);
+			border-radius: 18px;
+			display: inline-flex; align-items: center; justify-content: center;
+			font-size: 1.8rem; color: var(--blue);
+			margin: 0 auto 1.5rem;
+			animation: fadeDown .55s .1s ease both;
+		}
+
+		/* ── Texts ── */
+		.error-title {
+			font-size: 1.35rem; font-weight: 700;
+			color: var(--text); margin-bottom: .6rem;
+			animation: fadeDown .55s .15s ease both;
+		}
+
+		.error-desc {
+			font-size: .92rem; color: var(--muted);
+			line-height: 1.65; margin-bottom: 2rem;
+			animation: fadeDown .55s .2s ease both;
+		}
+
+		/* ── Actions ── */
+		.actions {
+			display: flex; gap: .75rem;
+			justify-content: center; flex-wrap: wrap;
+			animation: fadeDown .55s .25s ease both;
+		}
+
+		.btn-primary-custom {
+			display: inline-flex; align-items: center; gap: .45rem;
+			background: var(--blue);
+			color: #fff; font-size: .88rem; font-weight: 600;
+			border: none; border-radius: 10px;
+			padding: .65rem 1.4rem;
+			cursor: pointer; text-decoration: none;
+			transition: background .15s, transform .12s;
+		}
+		.btn-primary-custom:hover {
+			background: var(--blue-d); color: #fff; transform: translateY(-1px);
+		}
+
+		.btn-ghost {
+			display: inline-flex; align-items: center; gap: .45rem;
+			background: transparent;
+			color: var(--muted); font-size: .88rem; font-weight: 600;
+			border: 1px solid var(--border);
+			border-radius: 10px; padding: .65rem 1.4rem;
+			cursor: pointer; text-decoration: none;
+			transition: border-color .15s, color .15s, transform .12s;
+		}
+		.btn-ghost:hover {
+			border-color: rgba(255,255,255,.15);
+			color: var(--text); transform: translateY(-1px);
+		}
+
+		/* ── Divider ── */
+		.divider {
+			margin: 2.5rem auto 1.5rem;
+			width: 60px; height: 1px;
+			background: var(--border);
+			animation: fadeDown .55s .3s ease both;
+		}
+
+		/* ── Footer ── */
+		.page-footer {
+			font-size: .73rem; color: #475569;
+			animation: fadeDown .55s .35s ease both;
+		}
+
+		/* ── Animations ── */
+		@keyframes fadeDown {
+			from { opacity: 0; transform: translateY(-10px); }
+			to   { opacity: 1; transform: translateY(0); }
+		}
+
+		@media (max-width: 480px) {
+			.brand { margin-bottom: 2rem; }
+			.actions { flex-direction: column; align-items: center; }
+			.btn-primary-custom, .btn-ghost { width: 100%; justify-content: center; }
+		}
+	</style>
 </head>
 <body>
-	<div class="container">
-			<div style="background-color: rgba(0, 0, 0, 0.2); text-align: center;">
-				<a href="#">SisTech</a>
-			</div>
-			<br /><br />
-			<h4 style="text-align: center;" >ERRO 404! Página não encontrada!</h4>
-			<h5 style="text-align: center;" ><a href="/sistech/home">Voltar!</a></h5>
-			<br /><br />
-			<footer>
-				<div style="background-color: rgba(0, 0, 0, 0.2); text-align: center;">
-					© 2026 Copyright:
-					<a href="#">TechGold</a>
-				</div>
-			</footer>
+
+<div class="wrapper">
+
+	<!-- Brand -->
+	<div class="brand">
+		<div class="brand-logo">
+			<img src="assets/img/p1.png" alt="ProviderOne">
+		</div>
+		<span class="brand-name">Sentinel</span>
 	</div>
+
+	<!-- Error code -->
+	<div class="error-code">404</div>
+
+	<!-- Icon -->
+	<div class="error-icon">
+		<i class="bi bi-search"></i>
+	</div>
+
+	<!-- Message -->
+	<h1 class="error-title">Página não encontrada</h1>
+	<p class="error-desc">
+		O endereço que você acessou não existe ou foi movido.<br>
+		Verifique o link ou retorne ao início.
+	</p>
+
+	<!-- Actions -->
+	<div class="actions">
+		<a href="javascript:history.back()" class="btn-primary-custom">
+			<i class="bi bi-arrow-left"></i> Página anterior
+		</a>
+	</div>
+
+	<div class="divider"></div>
+
+	<p class="page-footer">© 2026 TechGold · Sentinel</p>
+
+</div>
+
 </body>
 </html>

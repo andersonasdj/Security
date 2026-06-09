@@ -50,6 +50,66 @@ public class PhishingRelatorioRestController {
         return ResponseEntity.ok(resposta);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SADMIN')")
+    @GetMapping("/{campanhaId}/executivo")
+    public ResponseEntity<?> relatorioExecutivo(@PathVariable Long campanhaId) {
+        return campanhaService.buscarPorId(campanhaId).map(campanha -> {
+            CampanhaResumoProjecao resumo = campanhaService.buscarResumoPorId(campanhaId);
+            List<AlvoCliqueProjecao> alvos = campanhaService.buscarCliquesPorCampanha(campanhaId);
+
+            long totalAlvos = resumo.getTotalAlvos() != null ? resumo.getTotalAlvos() : 0;
+            long enviados   = resumo.getEnviados()   != null ? resumo.getEnviados()   : 0;
+            long clicados   = resumo.getClicados()   != null ? resumo.getClicados()   : 0;
+            long naoClicados = enviados - clicados;
+            double taxa = totalAlvos > 0 ? Math.round((double) clicados / totalAlvos * 1000.0) / 10.0 : 0.0;
+
+            Map<String, Object> campInfo = new HashMap<>();
+            campInfo.put("id",            campanha.getId());
+            campInfo.put("nome",          campanha.getNome());
+            campInfo.put("descricao",     campanha.getDescricao());
+            campInfo.put("cliente",       campanha.getCliente().getNomeCliente());
+            campInfo.put("status",        campanha.getStatus().toString());
+            campInfo.put("criadoPor",     campanha.getCriadoPor());
+            campInfo.put("dataCriacao",   campanha.getDataCriacao());
+            campInfo.put("dataInicio",    campanha.getDataInicio());
+            campInfo.put("dataConclusao", campanha.getDataConclusao());
+
+            Map<String, Object> modeloInfo = null;
+            if (campanha.getModeloEmail() != null) {
+                var m = campanha.getModeloEmail();
+                modeloInfo = new HashMap<>();
+                modeloInfo.put("nome",      m.getNome());
+                modeloInfo.put("assunto",   m.getAssunto());
+                modeloInfo.put("categoria", m.getCategoria());
+                modeloInfo.put("corpoHtml", m.getCorpoHtml());
+            }
+
+            Map<String, Object> stats = new HashMap<>();
+            stats.put("totalAlvos",  totalAlvos);
+            stats.put("enviados",    enviados);
+            stats.put("clicados",    clicados);
+            stats.put("naoClicados", Math.max(naoClicados, 0));
+            stats.put("taxaClique",  taxa);
+
+            Map<String, Object> resposta = new HashMap<>();
+            resposta.put("campanha",     campInfo);
+            resposta.put("modeloEmail",  modeloInfo);
+            resposta.put("estatisticas", stats);
+            resposta.put("alvos", alvos.stream().map(a -> {
+                Map<String, Object> item = new HashMap<>();
+                item.put("nome",      a.getNome());
+                item.put("email",     a.getEmail());
+                item.put("enviado",   a.isEnviado());
+                item.put("clicou",    a.isClicou());
+                item.put("dataEnvio", a.getDataEnvio());
+                item.put("dataClique",a.getDataClique());
+                return item;
+            }).toList());
+
+            return ResponseEntity.ok(resposta);
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
     private DtoCampanhaResumo toDto(CampanhaResumoProjecao p) {
         long total = p.getTotalAlvos() != null ? p.getTotalAlvos() : 0;
         long clicados = p.getClicados() != null ? p.getClicados() : 0;

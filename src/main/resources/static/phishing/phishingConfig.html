@@ -67,6 +67,7 @@
 					<a href="/security/phishing/relatorios" class="sidebar-subitem"><i class="bi bi-bar-chart text-warning"></i>Relatórios</a>
 					<a href="/security/phishing/config" class="sidebar-subitem active"><i class="bi bi-gear text-success"></i>Configuração SMTP</a>
 					<a href="/security/phishing/educacional-config" class="sidebar-subitem"><i class="bi bi-palette text-warning"></i>Pág. Educacional</a>
+					<a href="/security/phishing/contatos" class="sidebar-subitem"><i class="bi bi-people text-info"></i>Contatos</a>
 				</div>
 			</div>
 		</div>
@@ -172,6 +173,7 @@
 								<li><hr class="dropdown-divider"></li>
 								<li><a class="dropdown-item active" href="/security/phishing/config"><i class="bi bi-gear me-2 text-success"></i>Configuração SMTP</a></li>
 								<li><a class="dropdown-item" href="/security/phishing/educacional-config"><i class="bi bi-palette me-2 text-warning"></i>Pág. Educacional</a></li>
+								<li><a class="dropdown-item" href="/security/phishing/contatos"><i class="bi bi-people me-2 text-info"></i>Contatos</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -272,6 +274,18 @@
 					<div class="col-6">
 						<label class="form-label small fw-semibold">E-mail do remetente <span class="text-danger">*</span></label>
 						<input type="email" class="form-control form-control-sm" id="configRemetenteEmail" placeholder="seguranca@exemplo.com">
+					</div>
+				</div>
+				<div class="row g-2 mt-1">
+					<div class="col-6">
+						<label class="form-label small fw-semibold">E-mails por lote <span class="text-danger">*</span></label>
+						<input type="number" class="form-control form-control-sm" id="configTamanheLote" min="1" max="500" value="10">
+						<div class="form-text">Envios antes da pausa</div>
+					</div>
+					<div class="col-6">
+						<label class="form-label small fw-semibold">Intervalo (segundos) <span class="text-danger">*</span></label>
+						<input type="number" class="form-control form-control-sm" id="configIntervaloSegundos" min="0" max="3600" value="30">
+						<div class="form-text">0 = sem pausa</div>
 					</div>
 				</div>
 				<div class="d-flex flex-column gap-2 mt-3">
@@ -382,7 +396,8 @@
 							<hr>
 							<p class="small mb-1"><i class="bi bi-hdd-network me-1 text-muted"></i>${escapeHtml(c.host)}:${c.porta} ${c.usarTls ? '(TLS)' : ''}</p>
 							<p class="small mb-1"><i class="bi bi-person me-1 text-muted"></i>${escapeHtml(c.usuario)}</p>
-							<p class="small mb-0"><i class="bi bi-envelope me-1 text-muted"></i>${escapeHtml(c.remetenteNome)} &lt;${escapeHtml(c.remetenteEmail)}&gt;</p>
+							<p class="small mb-1"><i class="bi bi-envelope me-1 text-muted"></i>${escapeHtml(c.remetenteNome)} &lt;${escapeHtml(c.remetenteEmail)}&gt;</p>
+							<p class="small mb-0"><i class="bi bi-layers me-1 text-muted"></i>${c.tamanheLote} e-mails/lote &nbsp;·&nbsp; <i class="bi bi-clock me-1 text-muted"></i>${c.intervaloSegundos}s de pausa</p>
 						</div>
 						<div class="card-footer bg-transparent border-0 d-flex justify-content-end gap-2">
 							<button class="btn btn-outline-secondary btn-sm" onclick="abrirModalEdicao(${c.id})"><i class="bi bi-pencil"></i></button>
@@ -405,6 +420,8 @@
 		document.getElementById('configSenha').value = '';
 		document.getElementById('configRemetenteNome').value = '';
 		document.getElementById('configRemetenteEmail').value = '';
+		document.getElementById('configTamanheLote').value = '10';
+		document.getElementById('configIntervaloSegundos').value = '30';
 		document.getElementById('configUsarTls').checked = true;
 		document.getElementById('configAtivo').checked = true;
 		document.getElementById('lblSenhaObr').textContent = '*';
@@ -425,6 +442,8 @@
 		document.getElementById('configSenha').value = '';
 		document.getElementById('configRemetenteNome').value = c.remetenteNome;
 		document.getElementById('configRemetenteEmail').value = c.remetenteEmail;
+		document.getElementById('configTamanheLote').value = c.tamanheLote ?? 10;
+		document.getElementById('configIntervaloSegundos').value = c.intervaloSegundos ?? 30;
 		document.getElementById('configUsarTls').checked = c.usarTls;
 		document.getElementById('configAtivo').checked = c.ativo;
 		document.getElementById('lblSenhaObr').textContent = '';
@@ -446,6 +465,8 @@
 			senha: document.getElementById('configSenha').value,
 			remetenteNome: document.getElementById('configRemetenteNome').value.trim(),
 			remetenteEmail: document.getElementById('configRemetenteEmail').value.trim(),
+			tamanheLote: parseInt(document.getElementById('configTamanheLote').value) || 10,
+			intervaloSegundos: parseInt(document.getElementById('configIntervaloSegundos').value) || 0,
 			usarTls: document.getElementById('configUsarTls').checked,
 			ativo: document.getElementById('configAtivo').checked
 		};

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="../assets/img/favicon.ico">
+	<link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="../assets/css/defaultStyle.css?v=1.1">
+	<link rel="stylesheet" href="../assets/css/dark.css?v=3.2">
+	<link rel="stylesheet" href="../assets/css/navbar.css?v=3.2">
+	<link rel="stylesheet" href="../assets/css/home.css?v=3.2">
+	<title>Contatos — Sentinel</title>
+</head>
+<body>
+<script>(function(){if(localStorage.getItem('darkMode')==='enabled')document.body.classList.add('dark-mode');document.body.dataset.layout=localStorage.getItem('navLayout')||'top';if(localStorage.getItem('sidebarCollapsed')==='true')document.body.classList.add('sidebar-collapsed');})();</script>
+<!-- SIDEBAR -->
+<aside id="sidebarNav" class="sistech-sidebar">
+	<div class="sidebar-brand">
+		<div class="sidebar-brand-icon">
+			<img src="../assets/img/key.png" style="height:13px;">
+		</div>
+		<span class="sidebar-brand-text">Sentinel</span>
+	</div>
+	<div class="sidebar-scroll">
+		<a href="/security/home" class="sidebar-item">
+			<i class="bi bi-house-fill"></i>
+			<span class="sidebar-item-label">Início</span>
+		</a>
+		<div class="sidebar-group" id="sgClientes">
+			<button class="sidebar-group-header" onclick="toggleSidebarGroup('sgClientes')">
+				<i class="bi bi-building"></i>
+				<span class="sidebar-group-label">Clientes</span>
+				<i class="bi bi-chevron-down sidebar-chevron"></i>
+			</button>
+			<div class="sidebar-group-items">
+				<a href="/security/cliente/list" class="sidebar-subitem"><i class="bi bi-list-ul text-primary"></i>Listar</a>
+				<a href="/security/cliente/form" class="sidebar-subitem"><i class="bi bi-plus-circle text-success"></i>Novo</a>
+			</div>
+		</div>
+		<div class="sidebar-group" id="sgFuncionarios">
+			<button class="sidebar-group-header" onclick="toggleSidebarGroup('sgFuncionarios')">
+				<i class="bi bi-person-badge"></i>
+				<span class="sidebar-group-label">Funcionários</span>
+				<i class="bi bi-chevron-down sidebar-chevron"></i>
+			</button>
+			<div class="sidebar-group-items">
+				<a href="/security/funcionario/list" class="sidebar-subitem"><i class="bi bi-list-ul text-primary"></i>Listar</a>
+				<a href="/security/funcionario/form" class="sidebar-subitem"><i class="bi bi-plus-circle text-success"></i>Novo</a>
+			</div>
+		</div>
+		<div class="sidebar-group open" id="sgPhishing">
+			<button class="sidebar-group-header" onclick="toggleSidebarGroup('sgPhishing')">
+				<i class="bi bi-shield-exclamation"></i>
+				<span class="sidebar-group-label">Phishing</span>
+				<i class="bi bi-chevron-down sidebar-chevron"></i>
+			</button>
+			<div class="sidebar-group-items">
+				<a href="/security/phishing/campanhas" class="sidebar-subitem"><i class="bi bi-send text-primary"></i>Campanhas</a>
+				<a href="/security/phishing/modelos" class="sidebar-subitem"><i class="bi bi-file-earmark-richtext text-secondary"></i>Modelos de E-mail</a>
+				<a href="/security/phishing/relatorios" class="sidebar-subitem"><i class="bi bi-bar-chart text-warning"></i>Relatórios</a>
+				<a href="/security/phishing/config" class="sidebar-subitem"><i class="bi bi-gear text-success"></i>Configuração SMTP</a>
+				<a href="/security/phishing/educacional-config" class="sidebar-subitem"><i class="bi bi-palette text-warning"></i>Pág. Educacional</a>
+				<a href="/security/phishing/contatos" class="sidebar-subitem active"><i class="bi bi-people text-info"></i>Contatos</a>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar-footer">
+		<button class="sidebar-collapse-btn" id="sidebarCollapseBtn" onclick="toggleSidebarCollapse()" title="Recolher barra lateral">
+			<i class="bi bi-arrow-bar-left" id="sidebarCollapseIcon"></i>
+		</button>
+	</div>
+</aside>
+<!-- FLYOUT: submenu ao clicar no ícone com sidebar recolhida -->
+<div id="sidebarFlyout" class="sidebar-flyout">
+	<div class="sidebar-flyout-title" id="sidebarFlyoutTitle"></div>
+	<div id="sidebarFlyoutItems"></div>
+</div>
+<!-- OVERLAY MOBILE -->
+<div id="sidebarOverlay" onclick="closeSidebarMobile()"></div>
+<!-- SLIM TOPBAR (modo sidebar) -->
+<div id="slimTopbar" class="sistech-slim-topbar">
+	<button class="icon-btn d-lg-none" onclick="openSidebarMobile()" title="Menu" style="font-size:1.1rem;">
+		<i class="bi bi-list"></i>
+	</button>
+	<span style="font-size:.8rem;font-weight:600;color:#374151;" class="d-none d-sm-inline" id="slimTopbarTitle">ProviderOne Sentinel - TREINANDO PESSOAS, FORTALEÇENDO A SEGURANÇA</span>
+	<div class="ms-auto d-flex align-items-center gap-2">
+		<button class="layout-toggle-btn" onclick="toggleLayout()" title="Voltar ao navbar no topo">
+			<i class="bi bi-layout-three-columns"></i>
+		</button>
+		<button class="icon-btn" onclick="toggleDarkMode()" title="Alternar modo escuro">
+			<i class="bi bi-moon"></i>
+		</button>
+		<div class="dropdown">
+			<button class="user-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				<div class="user-avatar" id="userInitialsSlim">?</div>
+				<span class="user-name d-none d-md-inline" id="navNomeSlim">Usuário</span>
+				<i class="bi bi-chevron-down nav-chevron"></i>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-end">
+				<li><a class="dropdown-item" href="/security/funcionario/perfil"><i class="bi bi-person me-2"></i>Perfil</a></li>
+				<li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalFoto"><i class="bi bi-camera me-2"></i>Trocar foto</a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item" href="/security/gerencia"><i class="bi bi-gear me-2"></i>Gerência</a></li>
+				<li><a class="dropdown-item" href="/security/configuracoes"><i class="bi bi-sliders me-2"></i>Configurações</a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item" href="/security/sobre"><i class="bi bi-info-circle me-2"></i>Sobre</a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item text-danger" href="/security/logout"><i class="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+	<!-- NAVBAR -->
+	<nav class="navbar navbar-expand-lg navbar-modern sticky-top mb-2">
+		<div class="container-fluid px-3">
+			<a class="navbar-brand-modern" href="/security/home">
+				<div class="brand-icon"><img src="../assets/img/key.png" style="height:30px;"></div>
+				<span class="brand-text">Sentinel</span>
+			</a>
+			<button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarMain">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 align-items-lg-center">
+					<li class="nav-item">
+						<a class="nav-link-modern" href="/security/home"><i class="bi bi-house-fill"></i> Início</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link-modern dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="bi bi-building"></i> Clientes
+						</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="/security/cliente/list"><i class="bi bi-list-ul me-2 text-primary"></i>Listar</a></li>
+							<li><a class="dropdown-item" href="/security/cliente/form"><i class="bi bi-plus-circle me-2 text-success"></i>Novo</a></li>
+							<li><hr class="dropdown-divider"></li>
+						</ul>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link-modern dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="bi bi-person-badge"></i> Funcionários
+						</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="/security/funcionario/list"><i class="bi bi-list-ul me-2 text-primary"></i>Listar</a></li>
+							<li><a class="dropdown-item" href="/security/funcionario/form"><i class="bi bi-plus-circle me-2 text-success"></i>Novo</a></li>
+						</ul>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link-modern dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="bi bi-shield-exclamation"></i> Phishing
+						</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="/security/phishing/campanhas"><i class="bi bi-send me-2 text-primary"></i>Campanhas</a></li>
+							<li><a class="dropdown-item" href="/security/phishing/modelos"><i class="bi bi-file-earmark-richtext me-2 text-secondary"></i>Modelos de E-mail</a></li>
+							<li><a class="dropdown-item" href="/security/phishing/relatorios"><i class="bi bi-bar-chart me-2 text-warning"></i>Relatórios</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item" href="/security/phishing/config"><i class="bi bi-gear me-2 text-success"></i>Configuração SMTP</a></li>
+							<li><a class="dropdown-item" href="/security/phishing/educacional-config"><i class="bi bi-palette me-2 text-warning"></i>Pág. Educacional</a></li>
+							<li><a class="dropdown-item active" href="/security/phishing/contatos"><i class="bi bi-people me-2 text-info"></i>Contatos</a></li>
+						</ul>
+					</li>
+				</ul>
+				<div class="d-flex align-items-center gap-2">
+					<button class="layout-toggle-btn" onclick="toggleLayout()" title="Alternar para barra lateral">
+						<i class="bi bi-layout-sidebar"></i>
+					</button>
+					<button class="icon-btn" onclick="toggleDarkMode()" id="toggleDarkBtn" title="Alternar modo escuro" aria-label="Alternar modo escuro">
+						<i class="bi bi-moon"></i>
+					</button>
+					<div class="dropdown">
+						<button class="user-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<div class="user-avatar" id="userInitials">?</div>
+							<span class="user-name" id="navNome">Usuário</span>
+							<i class="bi bi-chevron-down nav-chevron"></i>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li><a class="dropdown-item" href="/security/funcionario/perfil"><i class="bi bi-person me-2"></i>Perfil</a></li>
+							<li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalFoto"><i class="bi bi-camera me-2"></i>Trocar foto</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item" href="/security/gerencia"><i class="bi bi-gear me-2"></i>Gerência</a></li>
+							<li><a class="dropdown-item" href="/security/configuracoes"><i class="bi bi-sliders me-2"></i>Configurações</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item" href="/security/sobre"><i class="bi bi-info-circle me-2"></i>Sobre</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item text-danger" href="/security/logout"><i class="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<!-- / NAVBAR -->
+
+	<div class="px-2 px-md-3">
+		<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+			<div>
+				<h5 class="mb-0 fw-bold"><i class="bi bi-people me-2 text-info"></i>Phishing — Contatos</h5>
+				<small class="text-muted">Gerencie e importe listas de contatos por cliente para uso nas campanhas de phishing.</small>
+			</div>
+			<div class="d-flex gap-2 flex-wrap">
+				<button class="btn btn-outline-secondary btn-sm" id="btnExportar" onclick="exportarCsv()" title="Exportar CSV" disabled>
+					<i class="bi bi-download me-1"></i>Exportar CSV
+				</button>
+				<button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalImportar">
+					<i class="bi bi-upload me-1"></i>Importar
+				</button>
+				<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalContato" onclick="abrirModalNovo()">
+					<i class="bi bi-plus-circle me-1"></i>Novo Contato
+				</button>
+			</div>
+		</div>
+
+		<!-- Filtros -->
+		<div class="card config-card mb-3">
+			<div class="card-body py-2 px-3">
+				<div class="row g-2 align-items-center">
+					<div class="col-12 col-md-5">
+						<label class="form-label mb-1 small text-muted">Cliente</label>
+						<select id="selectCliente" class="form-select form-select-sm" onchange="onClienteChange()">
+							<option value="">— Selecione um cliente —</option>
+						</select>
+					</div>
+					<div class="col-12 col-md-5">
+						<label class="form-label mb-1 small text-muted">Busca</label>
+						<div class="input-group input-group-sm">
+							<span class="input-group-text"><i class="bi bi-search"></i></span>
+							<input type="text" id="inputBusca" class="form-control" placeholder="Nome ou e-mail..." oninput="filtrarTabela()">
+						</div>
+					</div>
+					<div class="col-12 col-md-2">
+						<label class="form-label mb-1 small text-muted">Status</label>
+						<select id="selectStatus" class="form-select form-select-sm" onchange="filtrarTabela()">
+							<option value="">Todos</option>
+							<option value="ativo">Ativos</option>
+							<option value="inativo">Inativos</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Tabela -->
+		<div class="card config-card">
+			<div class="card-body p-0">
+				<div id="estadoSemCliente" class="text-center py-5 text-muted">
+					<i class="bi bi-building fs-2 d-block mb-2"></i>
+					Selecione um cliente para visualizar os contatos.
+				</div>
+				<div id="estadoCarregando" class="text-center py-5 text-muted d-none">
+					<div class="spinner-border spinner-border-sm me-2"></div>Carregando contatos...
+				</div>
+				<div id="estadoVazio" class="text-center py-5 text-muted d-none">
+					<i class="bi bi-inbox fs-2 d-block mb-2"></i>
+					Nenhum contato encontrado.
+				</div>
+				<div id="wrapTabela" class="d-none">
+					<div class="table-responsive">
+						<table class="table table-phishing table-hover mb-0 align-middle">
+							<thead>
+								<tr>
+									<th style="width:40px">#</th>
+									<th>Nome</th>
+									<th>E-mail</th>
+									<th class="text-center" style="width:90px">Status</th>
+									<th class="text-end" style="width:110px">Ações</th>
+								</tr>
+							</thead>
+							<tbody id="corpoTabela"></tbody>
+						</table>
+					</div>
+					<div class="px-3 py-2 border-top text-muted small">
+						Exibindo <span id="spanExibindo">0</span> de <span id="spanTotal">0</span> contatos
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ── MODAL: Novo / Editar Contato ───────────────────────────────────── -->
+<div class="modal fade" id="modalContato" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalContatoTitulo">Novo Contato</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="contatoId">
+				<div class="mb-3">
+					<label class="form-label">Cliente <span class="text-danger">*</span></label>
+					<select id="contatoCliente" class="form-select" required>
+						<option value="">— Selecione —</option>
+					</select>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Nome Completo <span class="text-danger">*</span></label>
+					<input type="text" id="contatoNome" class="form-control" placeholder="Ex: João Silva" maxlength="200">
+				</div>
+				<div class="mb-3">
+					<label class="form-label">E-mail <span class="text-danger">*</span></label>
+					<input type="email" id="contatoEmail" class="form-control" placeholder="joao.silva@empresa.com" maxlength="200">
+				</div>
+				<div class="form-check form-switch" id="wrapAtivo">
+					<input class="form-check-input" type="checkbox" id="contatoAtivo" checked>
+					<label class="form-check-label" for="contatoAtivo">Ativo</label>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary btn-sm" onclick="salvarContato()">
+					<i class="bi bi-check-lg me-1"></i>Salvar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ── MODAL: Importar ────────────────────────────────────────────────── -->
+<div class="modal fade" id="modalImportar" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><i class="bi bi-upload me-2"></i>Importar Contatos</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<!-- Cliente alvo -->
+				<div class="mb-3">
+					<label class="form-label fw-semibold">Cliente <span class="text-danger">*</span></label>
+					<select id="importCliente" class="form-select"></select>
+				</div>
+
+				<!-- Abas: Arquivo / Colar -->
+				<ul class="nav nav-tabs mb-3" id="tabsImportar">
+					<li class="nav-item">
+						<button class="nav-link active" data-tab="arquivo" onclick="switchTab('arquivo', this)">
+							<i class="bi bi-file-earmark-csv me-1"></i>Arquivo CSV
+						</button>
+					</li>
+					<li class="nav-item">
+						<button class="nav-link" data-tab="texto" onclick="switchTab('texto', this)">
+							<i class="bi bi-clipboard-data me-1"></i>Colar texto
+						</button>
+					</li>
+				</ul>
+
+				<!-- Aba arquivo -->
+				<div id="tabArquivo">
+					<div id="dropZone" class="border border-2 border-dashed rounded-3 text-center py-4 px-3 mb-2"
+						style="cursor:pointer;border-color:#dee2e6 !important;transition:border-color .2s"
+						onclick="document.getElementById('inputCsv').click()"
+						ondragover="event.preventDefault();this.style.borderColor='#0d6efd'"
+						ondragleave="this.style.borderColor=''"
+						ondrop="onDrop(event)">
+						<i class="bi bi-cloud-arrow-up fs-2 text-muted d-block mb-1"></i>
+						<span class="text-muted small">Arraste o arquivo CSV aqui ou <strong>clique para selecionar</strong></span>
+						<div id="nomeArquivo" class="mt-2 small text-primary fw-semibold"></div>
+					</div>
+					<input type="file" id="inputCsv" accept=".csv,.txt" class="d-none" onchange="onFileSelect(this)">
+					<div class="text-muted small">
+						Formato: <code>Nome Sobrenome,email@empresa.com</code> — uma entrada por linha. Cabeçalho opcional.
+					</div>
+				</div>
+
+				<!-- Aba texto -->
+				<div id="tabTexto" class="d-none">
+					<textarea id="textoContatos" class="form-control font-monospace" rows="8"
+						placeholder="João Silva,joao.silva@empresa.com&#10;Maria Santos;maria@empresa.com&#10;..."></textarea>
+					<div class="text-muted small mt-1">
+						Separador: vírgula <code>,</code> ou ponto-e-vírgula <code>;</code> — uma entrada por linha.
+					</div>
+				</div>
+
+				<!-- Pré-visualização -->
+				<div id="previewArea" class="d-none mt-3">
+					<div class="d-flex align-items-center justify-content-between mb-2">
+						<span class="fw-semibold small">Pré-visualização (<span id="previewCount">0</span> registros válidos)</span>
+						<span id="previewInvalidos" class="text-danger small"></span>
+					</div>
+					<div style="max-height:200px;overflow-y:auto">
+						<table class="table table-sm table-bordered mb-0 small">
+							<thead class="table-light"><tr><th>#</th><th>Nome</th><th>E-mail</th></tr></thead>
+							<tbody id="previewCorpo"></tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- Resultado da importação -->
+				<div id="resultadoImport" class="d-none mt-3"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+				<button type="button" class="btn btn-outline-secondary btn-sm" onclick="preVisualizarImport()">
+					<i class="bi bi-eye me-1"></i>Pré-visualizar
+				</button>
+				<button type="button" class="btn btn-info btn-sm text-white" id="btnImportar" onclick="executarImport()" disabled>
+					<i class="bi bi-upload me-1"></i>Importar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+	<div id="toastMsg" class="toast align-items-center text-white border-0" role="alert">
+		<div class="d-flex">
+			<div class="toast-body" id="toastTexto"></div>
+			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+		</div>
+	</div>
+</div>
+
+<script defer src="../assets/js/bootstrap.bundle.min.js"></script>
+<script defer src="../assets/js/dark.js"></script>
+<script defer src="../assets/js/navbar.js?v=1.5"></script>
+<script defer src="../assets/js/sidebar.js?v=1.5"></script>
+<script>
+	const API = '/security/api/phishing/contatos';
+	let todosContatos = [];
+	let clienteSelecionadoId = null;
+	let arquivoSelecionado   = null;
+	let tabAtiva = 'arquivo';
+
+	// ── Inicialização ────────────────────────────────────────────────────────
+	(async function init() {
+		await carregarClientes();
+	})();
+
+	async function carregarClientes() {
+		const res = await fetch(`${API}/clientes`);
+		const clientes = await res.json();
+
+		const selMain   = document.getElementById('selectCliente');
+		const selModal  = document.getElementById('contatoCliente');
+		const selImport = document.getElementById('importCliente');
+
+		clientes.forEach(c => {
+			const opt = `<option value="${c.id}">${esc(c.nome)}</option>`;
+			selMain.insertAdjacentHTML('beforeend', opt);
+			selModal.insertAdjacentHTML('beforeend', opt);
+			selImport.insertAdjacentHTML('beforeend', `<option value="${c.id}">${esc(c.nome)}</option>`);
+		});
+	}
+
+	// ── Seleção de cliente ───────────────────────────────────────────────────
+	function onClienteChange() {
+		const id = document.getElementById('selectCliente').value;
+		clienteSelecionadoId = id || null;
+		document.getElementById('btnExportar').disabled = !id;
+		if (!id) { mostrarEstado('semCliente'); return; }
+		carregarContatos(id);
+	}
+
+	async function carregarContatos(clienteId) {
+		mostrarEstado('carregando');
+		const res = await fetch(`${API}?clienteId=${clienteId}`);
+		todosContatos = await res.json();
+		filtrarTabela();
+	}
+
+	// ── Tabela ───────────────────────────────────────────────────────────────
+	function filtrarTabela() {
+		const termo  = document.getElementById('inputBusca').value.toLowerCase();
+		const status = document.getElementById('selectStatus').value;
+
+		const filtrado = todosContatos.filter(c => {
+			const matchTexto  = !termo || c.nome.toLowerCase().includes(termo) || c.email.toLowerCase().includes(termo);
+			const matchStatus = !status
+				|| (status === 'ativo'   &&  c.ativo)
+				|| (status === 'inativo' && !c.ativo);
+			return matchTexto && matchStatus;
+		});
+
+		renderTabela(filtrado);
+	}
+
+	function renderTabela(lista) {
+		if (lista.length === 0) { mostrarEstado('vazio'); return; }
+
+		mostrarEstado('tabela');
+		const tbody = document.getElementById('corpoTabela');
+		tbody.innerHTML = '';
+
+		lista.forEach((c, i) => {
+			const badgeAtivo = c.ativo
+				? '<span class="badge bg-success-subtle text-success border border-success-subtle">Ativo</span>'
+				: '<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Inativo</span>';
+
+			tbody.insertAdjacentHTML('beforeend', `
+				<tr>
+					<td class="ps-3 text-muted small">${i + 1}</td>
+					<td class="fw-semibold">${esc(c.nome)}</td>
+					<td class="text-muted">${esc(c.email)}</td>
+					<td class="text-center">${badgeAtivo}</td>
+					<td class="text-center">
+						<button class="btn btn-outline-primary btn-sm py-0 px-2 me-1" onclick="abrirModalEditar(${c.id})" title="Editar">
+							<i class="bi bi-pencil"></i>
+						</button>
+						<button class="btn btn-outline-danger btn-sm py-0 px-2" onclick="confirmarDeletar(${c.id}, '${esc(c.nome)}')" title="Remover">
+							<i class="bi bi-trash3"></i>
+						</button>
+					</td>
+				</tr>`);
+		});
+
+		document.getElementById('spanExibindo').textContent = lista.length;
+		document.getElementById('spanTotal').textContent    = todosContatos.length;
+	}
+
+	function mostrarEstado(estado) {
+		document.getElementById('estadoSemCliente').classList.toggle('d-none', estado !== 'semCliente');
+		document.getElementById('estadoCarregando').classList.toggle('d-none', estado !== 'carregando');
+		document.getElementById('estadoVazio').classList.toggle('d-none',      estado !== 'vazio');
+		document.getElementById('wrapTabela').classList.toggle('d-none',       estado !== 'tabela');
+	}
+
+	// ── Modal Novo / Editar ──────────────────────────────────────────────────
+	function abrirModalNovo() {
+		document.getElementById('modalContatoTitulo').textContent = 'Novo Contato';
+		document.getElementById('contatoId').value    = '';
+		document.getElementById('contatoNome').value  = '';
+		document.getElementById('contatoEmail').value = '';
+		document.getElementById('contatoAtivo').checked = true;
+		document.getElementById('wrapAtivo').classList.add('d-none');
+
+		// Pré-selecionar o cliente já selecionado na tela principal
+		if (clienteSelecionadoId)
+			document.getElementById('contatoCliente').value = clienteSelecionadoId;
+	}
+
+	async function abrirModalEditar(id) {
+		const res = await fetch(`${API}/${id}`);
+		if (!res.ok) { toast('Erro ao buscar contato.', 'danger'); return; }
+		const c = await res.json();
+
+		document.getElementById('modalContatoTitulo').textContent = 'Editar Contato';
+		document.getElementById('contatoId').value       = c.id;
+		document.getElementById('contatoCliente').value  = c.clienteId;
+		document.getElementById('contatoNome').value     = c.nome;
+		document.getElementById('contatoEmail').value    = c.email;
+		document.getElementById('contatoAtivo').checked  = c.ativo;
+		document.getElementById('wrapAtivo').classList.remove('d-none');
+
+		const modal = new bootstrap.Modal(document.getElementById('modalContato'));
+		modal.show();
+	}
+
+	async function salvarContato() {
+		const id    = document.getElementById('contatoId').value;
+		const nome  = document.getElementById('contatoNome').value.trim();
+		const email = document.getElementById('contatoEmail').value.trim();
+		const ativo = document.getElementById('contatoAtivo').checked;
+		const clienteId = document.getElementById('contatoCliente').value;
+
+		if (!clienteId || !nome || !email) {
+			toast('Preencha todos os campos obrigatórios.', 'warning'); return;
+		}
+
+		const body = id
+			? { nome, email, ativo }
+			: { clienteId: Number(clienteId), nome, email };
+
+		const url    = id ? `${API}/${id}` : API;
+		const method = id ? 'PUT' : 'POST';
+
+		const res = await fetch(url, {
+			method,
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(body)
+		});
+
+		if (!res.ok) {
+			const msg = await res.text();
+			toast(msg || 'Erro ao salvar.', 'danger'); return;
+		}
+
+		bootstrap.Modal.getInstance(document.getElementById('modalContato'))?.hide();
+		toast(id ? 'Contato atualizado.' : 'Contato criado.', 'success');
+		if (clienteSelecionadoId) carregarContatos(clienteSelecionadoId);
+	}
+
+	// ── Deletar ──────────────────────────────────────────────────────────────
+	function confirmarDeletar(id, nome) {
+		if (!confirm(`Remover o contato "${nome}"?`)) return;
+		deletarContato(id);
+	}
+
+	async function deletarContato(id) {
+		const res = await fetch(`${API}/${id}`, { method: 'DELETE' });
+		if (!res.ok) { toast('Erro ao remover contato.', 'danger'); return; }
+		toast('Contato removido.', 'success');
+		if (clienteSelecionadoId) carregarContatos(clienteSelecionadoId);
+	}
+
+	// ── Exportar CSV ─────────────────────────────────────────────────────────
+	function exportarCsv() {
+		if (!clienteSelecionadoId) return;
+		window.location.href = `${API}/exportar?clienteId=${clienteSelecionadoId}`;
+	}
+
+	// ── Import: tabs ─────────────────────────────────────────────────────────
+	function switchTab(tab, btn) {
+		tabAtiva = tab;
+		document.querySelectorAll('#tabsImportar .nav-link').forEach(b => b.classList.remove('active'));
+		btn.classList.add('active');
+		document.getElementById('tabArquivo').classList.toggle('d-none', tab !== 'arquivo');
+		document.getElementById('tabTexto').classList.toggle('d-none', tab !== 'texto');
+		resetImport();
+	}
+
+	function onFileSelect(input) {
+		arquivoSelecionado = input.files[0] || null;
+		document.getElementById('nomeArquivo').textContent = arquivoSelecionado?.name || '';
+		resetImport();
+	}
+
+	function onDrop(e) {
+		e.preventDefault();
+		document.getElementById('dropZone').style.borderColor = '';
+		const file = e.dataTransfer.files[0];
+		if (!file) return;
+		arquivoSelecionado = file;
+		document.getElementById('nomeArquivo').textContent = file.name;
+		const dt = new DataTransfer();
+		dt.items.add(file);
+		document.getElementById('inputCsv').files = dt.files;
+		resetImport();
+	}
+
+	function resetImport() {
+		document.getElementById('previewArea').classList.add('d-none');
+		document.getElementById('resultadoImport').classList.add('d-none');
+		document.getElementById('btnImportar').disabled = true;
+	}
+
+	// ── Import: pré-visualização ─────────────────────────────────────────────
+	async function preVisualizarImport() {
+		const linhas = await obterLinhas();
+		if (!linhas) return;
+
+		const validos = [], invalidos = [];
+		const emailRe = /^[A-Za-z0-9+_.\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/;
+
+		linhas.forEach((linha, i) => {
+			if (!linha.trim()) return;
+			const partes = linha.includes(';') ? linha.split(';', 2) : linha.split(',', 2);
+			if (partes.length < 2) { invalidos.push(`Linha ${i+1}: formato inválido`); return; }
+			const nome  = partes[0].trim();
+			const email = partes[1].trim().toLowerCase();
+			if (nome.equalsIgnoreCase?.('nome') && email.equalsIgnoreCase?.('email')) return;
+			if (!nome || !email) { invalidos.push(`Linha ${i+1}: campo vazio`); return; }
+			if (!emailRe.test(email)) { invalidos.push(`Linha ${i+1}: e-mail inválido`); return; }
+			validos.push({ nome, email });
+		});
+
+		const corpo = document.getElementById('previewCorpo');
+		corpo.innerHTML = '';
+		validos.slice(0, 50).forEach((r, i) => {
+			corpo.insertAdjacentHTML('beforeend',
+				`<tr><td>${i+1}</td><td>${esc(r.nome)}</td><td>${esc(r.email)}</td></tr>`);
+		});
+		if (validos.length > 50) {
+			corpo.insertAdjacentHTML('beforeend',
+				`<tr><td colspan="3" class="text-muted text-center">... e mais ${validos.length - 50} registros</td></tr>`);
+		}
+
+		document.getElementById('previewCount').textContent = validos.length;
+		document.getElementById('previewInvalidos').textContent =
+			invalidos.length ? `${invalidos.length} linha(s) inválida(s)` : '';
+		document.getElementById('previewArea').classList.remove('d-none');
+		document.getElementById('btnImportar').disabled = validos.length === 0;
+	}
+
+	// ── Import: execução ─────────────────────────────────────────────────────
+	async function executarImport() {
+		const clienteId = document.getElementById('importCliente').value;
+		if (!clienteId) { toast('Selecione um cliente.', 'warning'); return; }
+
+		document.getElementById('btnImportar').disabled = true;
+
+		let res;
+		if (tabAtiva === 'arquivo' && arquivoSelecionado) {
+			const fd = new FormData();
+			fd.append('clienteId', clienteId);
+			fd.append('arquivo', arquivoSelecionado);
+			res = await fetch(`${API}/importar`, { method: 'POST', body: fd });
+		} else {
+			const texto = document.getElementById('textoContatos').value;
+			res = await fetch(`${API}/importar-texto`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ clienteId: Number(clienteId), texto })
+			});
+		}
+
+		if (!res.ok) { toast('Erro ao importar.', 'danger'); return; }
+		const r = await res.json();
+
+		const resultDiv = document.getElementById('resultadoImport');
+		const cor = r.importados > 0 ? 'success' : 'secondary';
+		let html = `<div class="alert alert-${cor} py-2 mb-2">
+			<strong>${r.importados}</strong> importado(s) &nbsp;·&nbsp;
+			<strong>${r.duplicados}</strong> duplicado(s) &nbsp;·&nbsp;
+			<strong>${r.invalidos}</strong> inválido(s)
+		</div>`;
+		if (r.erros?.length) {
+			html += `<ul class="small text-danger mb-0">` +
+				r.erros.map(e => `<li>${esc(e)}</li>`).join('') + `</ul>`;
+		}
+		resultDiv.innerHTML = html;
+		resultDiv.classList.remove('d-none');
+
+		if (r.importados > 0 && clienteSelecionadoId === clienteId)
+			carregarContatos(clienteId);
+	}
+
+	// ── Helpers ──────────────────────────────────────────────────────────────
+	async function obterLinhas() {
+		if (tabAtiva === 'arquivo') {
+			if (!arquivoSelecionado) { toast('Selecione um arquivo CSV.', 'warning'); return null; }
+			const texto = await arquivoSelecionado.text();
+			return texto.split(/\r?\n/);
+		} else {
+			const texto = document.getElementById('textoContatos').value;
+			if (!texto.trim()) { toast('Cole o conteúdo de contatos.', 'warning'); return null; }
+			return texto.split(/\r?\n/);
+		}
+	}
+
+	function esc(str) {
+		return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+	}
+
+	function toast(msg, tipo = 'success') {
+		const el = document.getElementById('toastMsg');
+		el.className = `toast align-items-center text-white border-0 bg-${tipo}`;
+		document.getElementById('toastTexto').textContent = msg;
+		bootstrap.Toast.getOrCreateInstance(el, { delay: 3500 }).show();
+	}
+
+	// Resetar estado do modal de importar ao abrir
+	document.getElementById('modalImportar').addEventListener('show.bs.modal', () => {
+		arquivoSelecionado = null;
+		document.getElementById('inputCsv').value = '';
+		document.getElementById('nomeArquivo').textContent = '';
+		document.getElementById('textoContatos').value = '';
+		resetImport();
+	});
+</script>
+</body>
+</html>

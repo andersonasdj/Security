@@ -46,4 +46,12 @@ public class PhishingConfigSmtp {
 
     private boolean ativo;
 
+    /** Quantos e-mails enviar por lote antes de pausar. */
+    @Column(name = "tamanho_lote")
+    private int tamanheLote = 10;
+
+    /** Segundos de pausa entre cada lote (0 = sem pausa). */
+    @Column(name = "intervalo_segundos")
+    private int intervaloSegundos = 30;
+
 }

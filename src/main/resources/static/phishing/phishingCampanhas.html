@@ -68,6 +68,7 @@
 					<a href="/security/phishing/relatorios" class="sidebar-subitem"><i class="bi bi-bar-chart text-warning"></i>Relatórios</a>
 					<a href="/security/phishing/config" class="sidebar-subitem"><i class="bi bi-gear text-success"></i>Configuração SMTP</a>
 					<a href="/security/phishing/educacional-config" class="sidebar-subitem"><i class="bi bi-palette text-warning"></i>Pág. Educacional</a>
+				<a href="/security/phishing/contatos" class="sidebar-subitem"><i class="bi bi-people text-info"></i>Contatos</a>
 				</div>
 			</div>
 		</div>
@@ -173,6 +174,7 @@
 								<li><hr class="dropdown-divider"></li>
 								<li><a class="dropdown-item" href="/security/phishing/config"><i class="bi bi-gear me-2 text-success"></i>Configuração SMTP</a></li>
 								<li><a class="dropdown-item" href="/security/phishing/educacional-config"><i class="bi bi-palette me-2 text-warning"></i>Pág. Educacional</a></li>
+								<li><a class="dropdown-item" href="/security/phishing/contatos"><i class="bi bi-people me-2 text-info"></i>Contatos</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -283,10 +285,46 @@
 					</div>
 				</div>
 				<div class="mb-1 mt-2">
-					<label class="form-label small fw-semibold">Alvos <span class="text-danger">*</span></label>
-					<div class="form-text mb-1">Um alvo por linha, no formato <code>Nome; email@dominio.com</code></div>
-					<textarea class="form-control form-control-sm font-monospace" id="campanhaAlvos" rows="6"
-						placeholder="Maria Silva; maria.silva@empresa.com&#10;João Souza; joao.souza@empresa.com"></textarea>
+					<div class="d-flex align-items-center justify-content-between mb-2">
+						<label class="form-label small fw-semibold mb-0">Alvos <span class="text-danger">*</span></label>
+						<div class="btn-group btn-group-sm" role="group" id="btnGrupoModoAlvos">
+							<input type="radio" class="btn-check" name="modoAlvos" id="modoLista"  value="lista"  autocomplete="off" checked>
+							<label class="btn btn-outline-secondary py-0 px-2" for="modoLista"  style="font-size:.74rem"><i class="bi bi-people me-1"></i>Lista</label>
+							<input type="radio" class="btn-check" name="modoAlvos" id="modoManual" value="manual" autocomplete="off">
+							<label class="btn btn-outline-secondary py-0 px-2" for="modoManual" style="font-size:.74rem"><i class="bi bi-keyboard me-1"></i>Manual</label>
+							<input type="radio" class="btn-check" name="modoAlvos" id="modoAmbos"  value="ambos"  autocomplete="off">
+							<label class="btn btn-outline-secondary py-0 px-2" for="modoAmbos"  style="font-size:.74rem"><i class="bi bi-layers me-1"></i>Ambos</label>
+						</div>
+					</div>
+
+					<!-- Seção: lista de contatos do cliente -->
+					<div id="secaoListaContatos">
+						<div id="aguardandoClienteMsg" class="text-center text-muted small py-3 border rounded">
+							<i class="bi bi-arrow-up me-1"></i>Selecione um cliente para carregar os contatos.
+						</div>
+						<div id="loadingContatosMsg" class="text-center text-muted small py-3 d-none">
+							<span class="spinner-border spinner-border-sm me-1"></span>Carregando contatos...
+						</div>
+						<div id="semContatosMsg" class="text-center text-muted small py-3 border rounded d-none">
+							<i class="bi bi-inbox me-1"></i>Nenhum contato ativo para este cliente.
+							<a href="/security/phishing/contatos" target="_blank" class="ms-1 small">Cadastrar contatos</a>
+						</div>
+						<div id="listaContatosWrap" class="d-none">
+							<div class="border rounded overflow-auto mb-1" style="max-height:150px" id="listaContatosCheckboxes"></div>
+							<div class="d-flex align-items-center gap-2 mt-1">
+								<span class="small text-muted"><span id="countContatosSel">0</span> selecionado(s)</span>
+								<button type="button" class="btn btn-link btn-sm py-0 ps-0 text-decoration-none small" onclick="selecionarTodosContatos(true)">Selecionar todos</button>
+								<button type="button" class="btn btn-link btn-sm py-0 ps-0 text-decoration-none small" onclick="selecionarTodosContatos(false)">Limpar</button>
+							</div>
+						</div>
+					</div>
+
+					<!-- Seção: digitação manual -->
+					<div id="secaoManual" class="d-none">
+						<div class="form-text mb-1">Um alvo por linha: <code>Nome; email@dominio.com</code></div>
+						<textarea class="form-control form-control-sm font-monospace" id="campanhaAlvos" rows="5"
+							placeholder="Maria Silva; maria.silva@empresa.com&#10;João Souza; joao.souza@empresa.com"></textarea>
+					</div>
 				</div>
 				<div class="alert alert-danger mt-2 mb-0 small d-none" id="erroFormCampanha"></div>
 			</div>
@@ -381,6 +419,16 @@
 		carregarModelos();
 		carregarConfigs();
 		carregarCampanhas();
+
+		// Recarregar contatos ao trocar o cliente
+		document.getElementById('campanhaCliente').addEventListener('change', function() {
+			if (this.value) carregarContatosParaModal(this.value);
+			else resetContatosModal();
+		});
+
+		// Alternar visibilidade das seções ao mudar o modo
+		document.querySelectorAll('input[name="modoAlvos"]').forEach(r =>
+			r.addEventListener('change', atualizarModoAlvos));
 	});
 
 	async function carregarUsuarioNav() {
@@ -471,6 +519,10 @@
 		document.getElementById('campanhaConfigSmtp').value = '';
 		document.getElementById('campanhaAlvos').value = '';
 		document.getElementById('erroFormCampanha').classList.add('d-none');
+		// Modo padrão: lista
+		document.getElementById('modoLista').checked = true;
+		atualizarModoAlvos();
+		resetContatosModal();
 		modalCampanha.show();
 	}
 
@@ -485,11 +537,86 @@
 		document.getElementById('campanhaModelo').value = c.modeloEmailId;
 		document.getElementById('campanhaConfigSmtp').value = c.configSmtpId;
 		document.getElementById('erroFormCampanha').classList.add('d-none');
-
+		// Ao editar: modo ambos para ver alvos atuais + opção de adicionar da lista
+		document.getElementById('modoAmbos').checked = true;
+		atualizarModoAlvos();
+		// Carregar alvos existentes no textarea e contatos do cliente em paralelo
 		fetch(`/security/api/phishing/campanhas/${id}/alvos`).then(r => r.json()).then(alvos => {
 			document.getElementById('campanhaAlvos').value = alvos.map(a => `${a.nome}; ${a.email}`).join('\n');
 		}).catch(() => { document.getElementById('campanhaAlvos').value = ''; });
+		if (c.clienteId) carregarContatosParaModal(c.clienteId);
+		else resetContatosModal();
 		modalCampanha.show();
+	}
+
+	// ── Funções de alvos ─────────────────────────────────────────────────────
+
+	function atualizarModoAlvos() {
+		const modo = document.querySelector('input[name="modoAlvos"]:checked').value;
+		const mostraLista  = modo === 'lista'  || modo === 'ambos';
+		const mostraManual = modo === 'manual' || modo === 'ambos';
+		document.getElementById('secaoListaContatos').classList.toggle('d-none', !mostraLista);
+		document.getElementById('secaoManual').classList.toggle('d-none',        !mostraManual);
+	}
+
+	function resetContatosModal() {
+		document.getElementById('aguardandoClienteMsg').classList.remove('d-none');
+		document.getElementById('loadingContatosMsg').classList.add('d-none');
+		document.getElementById('semContatosMsg').classList.add('d-none');
+		document.getElementById('listaContatosWrap').classList.add('d-none');
+		document.getElementById('listaContatosCheckboxes').innerHTML = '';
+		document.getElementById('countContatosSel').textContent = '0';
+	}
+
+	async function carregarContatosParaModal(clienteId) {
+		const aguardEl   = document.getElementById('aguardandoClienteMsg');
+		const loadingEl  = document.getElementById('loadingContatosMsg');
+		const semMsg     = document.getElementById('semContatosMsg');
+		const wrapEl     = document.getElementById('listaContatosWrap');
+		const cbDiv      = document.getElementById('listaContatosCheckboxes');
+
+		aguardEl.classList.add('d-none');
+		semMsg.classList.add('d-none');
+		wrapEl.classList.add('d-none');
+		loadingEl.classList.remove('d-none');
+
+		try {
+			const res = await fetch(`/security/api/phishing/contatos?clienteId=${clienteId}`);
+			const contatos = await res.json();
+			loadingEl.classList.add('d-none');
+
+			const ativos = contatos.filter(c => c.ativo);
+			if (ativos.length === 0) { semMsg.classList.remove('d-none'); return; }
+
+			cbDiv.innerHTML = '';
+			ativos.forEach(c => {
+				cbDiv.insertAdjacentHTML('beforeend', `
+					<div class="form-check py-1 px-5 border-bottom last:border-0">
+						<input class="form-check-input contato-check" type="checkbox"
+							id="cont_${c.id}" data-nome="${escapeHtml(c.nome)}" data-email="${escapeHtml(c.email)}"
+							onchange="atualizarContadorContatos()">
+						<label class="form-check-label small" for="cont_${c.id}">
+							${escapeHtml(c.nome)} <span class="text-muted">— ${escapeHtml(c.email)}</span>
+						</label>
+					</div>`);
+			});
+
+			atualizarContadorContatos();
+			wrapEl.classList.remove('d-none');
+		} catch (e) {
+			loadingEl.classList.add('d-none');
+			semMsg.classList.remove('d-none');
+		}
+	}
+
+	function atualizarContadorContatos() {
+		const total = document.querySelectorAll('.contato-check:checked').length;
+		document.getElementById('countContatosSel').textContent = total;
+	}
+
+	function selecionarTodosContatos(selecionar) {
+		document.querySelectorAll('.contato-check').forEach(cb => { cb.checked = selecionar; });
+		atualizarContadorContatos();
 	}
 
 	function parseAlvos(texto) {
@@ -499,12 +626,40 @@
 		}).filter(a => a.email);
 	}
 
+	function coletarAlvos() {
+		const modo = document.querySelector('input[name="modoAlvos"]:checked').value;
+		const alvos = [];
+		const emailsSeen = new Set();
+
+		if (modo === 'lista' || modo === 'ambos') {
+			document.querySelectorAll('.contato-check:checked').forEach(cb => {
+				const email = cb.dataset.email.toLowerCase();
+				if (!emailsSeen.has(email)) {
+					emailsSeen.add(email);
+					alvos.push({ nome: cb.dataset.nome, email });
+				}
+			});
+		}
+
+		if (modo === 'manual' || modo === 'ambos') {
+			parseAlvos(document.getElementById('campanhaAlvos').value).forEach(a => {
+				const email = a.email.toLowerCase();
+				if (!emailsSeen.has(email)) {
+					emailsSeen.add(email);
+					alvos.push(a);
+				}
+			});
+		}
+
+		return alvos;
+	}
+
 	function salvarCampanha() {
 		const id = document.getElementById('campanhaId').value;
 		const erroEl = document.getElementById('erroFormCampanha');
 		erroEl.classList.add('d-none');
 
-		const alvos = parseAlvos(document.getElementById('campanhaAlvos').value);
+		const alvos = coletarAlvos();
 
 		const dados = {
 			nome: document.getElementById('campanhaNome').value.trim(),

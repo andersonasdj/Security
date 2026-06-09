@@ -38,4 +38,16 @@ public class CampanhaPhishingController {
     public String educacionalConfig() {
         return "phishingEducacionalConfig.html";
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SADMIN')")
+    @GetMapping("/relatorio-executivo")
+    public String relatorioExecutivo() {
+        return "phishingRelatorioExecutivo.html";
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SADMIN')")
+    @GetMapping("/contatos")
+    public String contatos() {
+        return "phishingContatos.html";
+    }
 }

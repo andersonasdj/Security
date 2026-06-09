@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="../assets/img/favicon.ico">
+	<link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/bootstrap-icons.min.css">
+	<title>Relatório Executivo — Phishing</title>
+	<style>
+		:root {
+			--navy:    #0f172a;
+			--slate:   #1e293b;
+			--border:  #e2e8f0;
+			--text:    #0f172a;
+			--muted:   #64748b;
+			--red:     #ef4444;
+			--green:   #10b981;
+			--amber:   #f59e0b;
+			--blue:    #3b82f6;
+		}
+
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+
+		body {
+			background: #f8fafc;
+			color: var(--text);
+			font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+			font-size: .88rem;
+			line-height: 1.55;
+		}
+
+		/* ── Topbar de ação (não imprime) ── */
+		.action-bar {
+			background: var(--navy);
+			padding: .7rem 1.5rem;
+			display: flex; align-items: center; gap: .75rem;
+			position: sticky; top: 0; z-index: 50;
+		}
+		.action-bar .brand-pill {
+			background: #fff; border-radius: 6px;
+			padding: 3px 10px;
+			display: flex; align-items: center;
+		}
+		.action-bar .brand-pill img { height: 20px; }
+		.action-bar span {
+			color: #94a3b8; font-size: .8rem; font-weight: 600;
+			flex: 1;
+		}
+		.btn-print {
+			display: inline-flex; align-items: center; gap: .4rem;
+			background: var(--blue); color: #fff;
+			font-size: .82rem; font-weight: 600;
+			border: none; border-radius: 8px;
+			padding: .45rem 1.1rem; cursor: pointer;
+			transition: opacity .15s;
+		}
+		.btn-print:hover { opacity: .85; }
+		.btn-back {
+			display: inline-flex; align-items: center; gap: .4rem;
+			background: transparent; color: #94a3b8;
+			font-size: .82rem; font-weight: 600;
+			border: 1px solid rgba(255,255,255,.12); border-radius: 8px;
+			padding: .45rem 1rem; cursor: pointer; text-decoration: none;
+			transition: border-color .15s, color .15s;
+		}
+		.btn-back:hover { border-color: rgba(255,255,255,.3); color: #fff; }
+
+		/* ── Wrapper do relatório ── */
+		.report-wrapper {
+			max-width: 900px; margin: 2rem auto;
+			padding: 0 1.25rem 3rem;
+		}
+
+		/* ── Capa / Header ── */
+		.report-header {
+			background: var(--navy);
+			border-radius: 14px;
+			padding: 2rem 2.25rem 1.75rem;
+			margin-bottom: 1.5rem;
+			display: flex; align-items: flex-start; justify-content: space-between;
+			gap: 1.5rem; flex-wrap: wrap;
+		}
+		.report-header-left { flex: 1; }
+		.report-confidential {
+			display: inline-flex; align-items: center; gap: .35rem;
+			font-size: .68rem; font-weight: 700; text-transform: uppercase;
+			letter-spacing: .1em; color: var(--red);
+			background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.25);
+			padding: .25rem .7rem; border-radius: 999px; margin-bottom: .85rem;
+		}
+		.report-title {
+			font-size: 1.45rem; font-weight: 800; color: #fff;
+			letter-spacing: -.02em; line-height: 1.25;
+			margin-bottom: .35rem;
+		}
+		.report-campaign-name {
+			font-size: 1rem; color: #94a3b8; font-weight: 500;
+		}
+		.report-header-right { text-align: right; flex-shrink: 0; }
+		.report-logo-pill {
+			background: #fff; border-radius: 8px;
+			padding: 6px 14px; display: inline-flex; align-items: center;
+			margin-bottom: .75rem;
+		}
+		.report-logo-pill img { height: 26px; display: block; }
+		.report-meta { font-size: .75rem; color: #64748b; line-height: 1.7; }
+		.report-meta strong { color: #94a3b8; }
+
+		/* ── Section ── */
+		.section { margin-bottom: 1.5rem; }
+		.section-title {
+			font-size: .7rem; font-weight: 700; text-transform: uppercase;
+			letter-spacing: .1em; color: var(--muted);
+			margin-bottom: .85rem; padding-bottom: .4rem;
+			border-bottom: 1px solid var(--border);
+		}
+
+		/* ── Campanha info ── */
+		.info-grid {
+			display: grid; grid-template-columns: repeat(3, 1fr);
+			gap: .75rem;
+		}
+		.info-item {
+			background: #fff; border: 1px solid var(--border);
+			border-radius: 10px; padding: .85rem 1rem;
+		}
+		.info-label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .2rem; }
+		.info-value { font-size: .9rem; font-weight: 600; color: var(--text); }
+
+		/* ── KPIs ── */
+		.kpi-grid {
+			display: grid; grid-template-columns: repeat(4, 1fr);
+			gap: .75rem; margin-bottom: 1.5rem;
+		}
+		.kpi-card {
+			background: #fff; border: 1px solid var(--border);
+			border-radius: 12px; padding: 1.1rem 1.25rem;
+			text-align: center;
+		}
+		.kpi-num {
+			font-size: 2rem; font-weight: 800; letter-spacing: -.04em;
+			line-height: 1;
+		}
+		.kpi-label { font-size: .7rem; color: var(--muted); margin-top: .3rem; text-transform: uppercase; letter-spacing: .05em; }
+		.kpi-bar {
+			height: 4px; border-radius: 2px; margin-top: .75rem;
+		}
+
+		/* ── Charts row ── */
+		.charts-row {
+			display: grid; grid-template-columns: 220px 1fr;
+			gap: 1rem; margin-bottom: 1.5rem; align-items: start;
+		}
+		.chart-card {
+			background: #fff; border: 1px solid var(--border);
+			border-radius: 12px; padding: 1.1rem;
+		}
+		.chart-title {
+			font-size: .72rem; font-weight: 700; text-transform: uppercase;
+			letter-spacing: .06em; color: var(--muted); margin-bottom: .75rem;
+		}
+		/* Donut CSS-only */
+		.donut-wrap {
+			position: relative; width: 140px; height: 140px;
+			margin: 0 auto .75rem;
+		}
+		.donut-svg { width: 140px; height: 140px; transform: rotate(-90deg); }
+		.donut-bg { fill: none; stroke: #f1f5f9; stroke-width: 20; }
+		.donut-fill { fill: none; stroke-width: 20; stroke-linecap: round; transition: stroke-dasharray .6s ease; }
+		.donut-center {
+			position: absolute; inset: 0;
+			display: flex; flex-direction: column;
+			align-items: center; justify-content: center;
+		}
+		.donut-pct { font-size: 1.5rem; font-weight: 800; letter-spacing: -.04em; }
+		.donut-sub { font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+		.donut-legend { display: flex; flex-direction: column; gap: .4rem; }
+		.donut-legend-item { display: flex; align-items: center; gap: .5rem; font-size: .78rem; }
+		.donut-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+		/* Barra horizontal por campanha */
+		.hbar-row { margin-bottom: .65rem; }
+		.hbar-label { font-size: .78rem; color: var(--text); margin-bottom: .2rem; display: flex; justify-content: space-between; }
+		.hbar-track { height: 10px; background: #f1f5f9; border-radius: 5px; overflow: hidden; }
+		.hbar-fill { height: 100%; border-radius: 5px; transition: width .5s ease; }
+
+		/* ── Tabela de alvos ── */
+		.targets-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+		.targets-table th {
+			background: #f8fafc; font-size: .68rem; text-transform: uppercase;
+			letter-spacing: .07em; color: var(--muted); font-weight: 700;
+			padding: .6rem .85rem; border-bottom: 2px solid var(--border);
+			text-align: left;
+		}
+		.targets-table td {
+			padding: .55rem .85rem; border-bottom: 1px solid #f1f5f9;
+			vertical-align: middle;
+		}
+		.targets-table tr:last-child td { border-bottom: none; }
+		.targets-table tr.clicou td { background: rgba(239,68,68,.03); }
+
+		.badge-status {
+			display: inline-flex; align-items: center; gap: .3rem;
+			font-size: .7rem; font-weight: 600; padding: .2rem .6rem;
+			border-radius: 999px;
+		}
+		.badge-clicou   { background: rgba(239,68,68,.1);  color: var(--red); }
+		.badge-enviado  { background: rgba(16,185,129,.1); color: var(--green); }
+		.badge-pendente { background: rgba(100,116,139,.1); color: var(--muted); }
+
+		/* ── Modelo de e-mail ── */
+		.email-preview-header {
+			background: #f8fafc; border: 1px solid var(--border);
+			border-radius: 10px 10px 0 0; padding: .65rem 1rem;
+			display: flex; flex-wrap: wrap; gap: .35rem .75rem; align-items: center;
+		}
+		.email-field { font-size: .78rem; }
+		.email-field span { color: var(--muted); }
+		.email-field strong { color: var(--text); }
+		.email-categoria {
+			margin-left: auto;
+			font-size: .68rem; font-weight: 700; text-transform: uppercase;
+			letter-spacing: .07em; color: var(--blue);
+			background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.18);
+			padding: .2rem .65rem; border-radius: 999px;
+		}
+		.email-iframe-wrap {
+			border: 1px solid var(--border); border-top: none;
+			border-radius: 0 0 10px 10px; overflow: hidden;
+			position: relative;
+		}
+		.email-iframe-wrap iframe {
+			width: 100%; min-height: 380px;
+			border: none; display: block;
+		}
+		.email-placeholder {
+			background: #fff; border: 1px solid var(--border);
+			border-top: none; border-radius: 0 0 10px 10px;
+			padding: 2.5rem 1.5rem; text-align: center;
+			color: var(--muted); font-size: .85rem;
+		}
+		/* Div clonado do conteúdo do e-mail — visível apenas no print */
+		.email-print-body {
+			display: none;
+			padding: 1rem;
+			font-size: .82rem;
+			word-break: break-word;
+		}
+
+		/* ── Rodapé do relatório ── */
+		.report-footer {
+			margin-top: 2rem;
+			padding-top: 1rem;
+			border-top: 1px solid var(--border);
+			display: flex; align-items: center; justify-content: space-between;
+			flex-wrap: wrap; gap: .5rem;
+		}
+		.report-footer-text { font-size: .72rem; color: #94a3b8; }
+
+		/* ── Loading ── */
+		.loading-state {
+			text-align: center; padding: 4rem 1rem; color: var(--muted);
+		}
+
+		/* ── Print / A4 ── */
+		@media print {
+			@page {
+				size: A4 portrait;
+				margin: 15mm 14mm 18mm 14mm;
+			}
+
+			/* Reset visual de tela */
+			.action-bar { display: none !important; }
+			body {
+				background: #fff !important;
+				font-size: .82rem;
+				-webkit-print-color-adjust: exact;
+				print-color-adjust: exact;
+			}
+
+			/* O wrapper vira a folha — sem margem extra, largura total */
+			.report-wrapper {
+				max-width: 100% !important;
+				margin: 0 !important;
+				padding: 0 !important;
+			}
+
+			/* Header mantém fundo escuro (color-adjust: exact acima garante) */
+			.report-header { border-radius: 0; margin-bottom: 10mm; }
+
+			/* Seções: nunca quebrar o título junto com o conteúdo */
+			.section { margin-bottom: 8mm; }
+			.section-title { break-after: avoid; }
+
+			/* Grids de informação e KPIs: manter juntos quando cabem */
+			.info-grid, .kpi-grid { break-inside: avoid; }
+			.info-item, .kpi-card { break-inside: avoid; }
+
+			/* Gráficos: forçar nova página se não couber na atual */
+			.charts-row { break-inside: avoid; }
+			.chart-card { break-inside: avoid; }
+
+			/* Nota de risco nunca separada do conteúdo acima */
+			.risk-note { break-inside: avoid; break-before: avoid; }
+
+			/* Seção de e-mail: iniciar sempre em nova página */
+			#secaoModeloEmail { break-before: page; }
+			.email-preview-header { break-after: avoid; }
+			.email-iframe-wrap { break-inside: avoid; overflow: visible !important; }
+			/* iframe oculto no print — exibir div clonado */
+			.email-iframe-wrap iframe { display: none !important; }
+			.email-print-body { display: block !important; }
+
+			/* Tabela de alvos: iniciar em nova página, sem overflow */
+			.section:has(.targets-table) { break-before: page; }
+			.table-outer { overflow: visible !important; border-radius: 0 !important; }
+			.table-scroll-wrap { overflow: visible !important; }
+			.targets-table {
+				break-inside: auto;
+				width: 100% !important;
+				font-size: .72rem;
+			}
+			.targets-table thead { display: table-header-group; }
+			.targets-table tr { break-inside: avoid; }
+			/* Colunas de data: compactar para caber em A4 */
+			.targets-table th:nth-child(5),
+			.targets-table td:nth-child(5),
+			.targets-table th:nth-child(7),
+			.targets-table td:nth-child(7) { white-space: nowrap; font-size: .68rem; }
+
+			/* Rodapé nunca flutuando sozinho */
+			.report-footer { break-inside: avoid; break-before: avoid; }
+
+			/* Filtros da tabela não imprimem */
+			.filter-row { display: none !important; }
+		}
+
+		@media (max-width: 640px) {
+			.kpi-grid { grid-template-columns: repeat(2, 1fr); }
+			.charts-row { grid-template-columns: 1fr; }
+			.info-grid { grid-template-columns: repeat(2, 1fr); }
+			.report-header { flex-direction: column; }
+			.report-header-right { text-align: left; }
+		}
+	</style>
+</head>
+<body>
+
+<!-- Barra de ações (não aparece na impressão) -->
+<div class="action-bar">
+	<div class="brand-pill">
+		<img src="../assets/img/p1.png" alt="Sentinel">
+	</div>
+	<span>Relatório Executivo de Campanha</span>
+	<a href="javascript:history.back()" class="btn-back">
+		<i class="bi bi-arrow-left"></i> Voltar
+	</a>
+	<button class="btn-print" onclick="window.print()">
+		<i class="bi bi-printer-fill"></i> Imprimir / PDF
+	</button>
+</div>
+
+<!-- Loading -->
+<div class="report-wrapper" id="loadingState">
+	<div class="loading-state">
+		<i class="bi bi-hourglass-split fs-2 d-block mb-2 text-muted"></i>
+		Carregando relatório...
+	</div>
+</div>
+
+<!-- Relatório (preenchido via JS) -->
+<div class="report-wrapper d-none" id="reportContent">
+
+	<!-- Header -->
+	<div class="report-header">
+		<div class="report-header-left">
+			<div class="report-confidential">
+				<i class="bi bi-shield-lock-fill"></i> Confidencial — uso interno
+			</div>
+			<div class="report-title">Relatório Executivo<br>de Campanha de Phishing</div>
+			<div class="report-campaign-name" id="rCampanhaNome">—</div>
+		</div>
+		<div class="report-header-right">
+			<div class="report-logo-pill">
+				<img src="../assets/img/p1.png" alt="ProviderOne">
+			</div>
+			<div class="report-meta">
+				<div><strong>Cliente:</strong> <span id="rCliente">—</span></div>
+				<div><strong>Status:</strong> <span id="rStatus">—</span></div>
+				<div><strong>Criado por:</strong> <span id="rCriadoPor">—</span></div>
+				<div><strong>Gerado em:</strong> <span id="rGeradoEm">—</span></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Info da campanha -->
+	<div class="section">
+		<div class="section-title">Informações da campanha</div>
+		<div class="info-grid">
+			<div class="info-item">
+				<div class="info-label">Data de criação</div>
+				<div class="info-value" id="rDataCriacao">—</div>
+			</div>
+			<div class="info-item">
+				<div class="info-label">Início do envio</div>
+				<div class="info-value" id="rDataInicio">—</div>
+			</div>
+			<div class="info-item">
+				<div class="info-label">Conclusão</div>
+				<div class="info-value" id="rDataConclusao">—</div>
+			</div>
+		</div>
+		<div class="info-item mt-2 d-none" id="rDescricaoWrap">
+			<div class="info-label">Descrição</div>
+			<div class="info-value fw-normal" id="rDescricao" style="font-size:.85rem"></div>
+		</div>
+	</div>
+
+	<!-- KPIs -->
+	<div class="section">
+		<div class="section-title">Indicadores-chave</div>
+		<div class="kpi-grid">
+			<div class="kpi-card">
+				<div class="kpi-num" id="kTotalAlvos" style="color:var(--blue)">0</div>
+				<div class="kpi-label">Total de alvos</div>
+				<div class="kpi-bar" style="background:var(--blue);opacity:.2"></div>
+			</div>
+			<div class="kpi-card">
+				<div class="kpi-num" id="kEnviados" style="color:var(--muted)">0</div>
+				<div class="kpi-label">E-mails enviados</div>
+				<div class="kpi-bar" style="background:var(--muted);opacity:.3"></div>
+			</div>
+			<div class="kpi-card">
+				<div class="kpi-num" id="kClicados" style="color:var(--red)">0</div>
+				<div class="kpi-label">Alvos que clicaram</div>
+				<div class="kpi-bar" style="background:var(--red);opacity:.2"></div>
+			</div>
+			<div class="kpi-card">
+				<div class="kpi-num" id="kTaxa" style="color:var(--amber)">0%</div>
+				<div class="kpi-label">Taxa de clique</div>
+				<div class="kpi-bar" id="kTaxaBar" style="background:var(--amber);opacity:.2"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Gráficos -->
+	<div class="section">
+		<div class="section-title">Análise visual</div>
+		<div class="charts-row">
+			<!-- Donut -->
+			<div class="chart-card">
+				<div class="chart-title">Proporção de cliques</div>
+				<div class="donut-wrap">
+					<svg class="donut-svg" viewBox="0 0 140 140">
+						<circle class="donut-bg" cx="70" cy="70" r="55"/>
+						<circle class="donut-fill" id="donutFill" cx="70" cy="70" r="55"
+							stroke="#ef4444" stroke-dasharray="0 346" stroke-dashoffset="0"/>
+					</svg>
+					<div class="donut-center">
+						<span class="donut-pct" id="donutPct" style="color:var(--red)">0%</span>
+						<span class="donut-sub">clicaram</span>
+					</div>
+				</div>
+				<div class="donut-legend">
+					<div class="donut-legend-item">
+						<span class="donut-dot" style="background:var(--red)"></span>
+						<span>Clicaram (<span id="legendClicados">0</span>)</span>
+					</div>
+					<div class="donut-legend-item">
+						<span class="donut-dot" style="background:#f1f5f9; border:1px solid #cbd5e1"></span>
+						<span>Não clicaram (<span id="legendNaoClicados">0</span>)</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Barras de proporção -->
+			<div class="chart-card">
+				<div class="chart-title">Comparativo envio × clique por grupo</div>
+				<div id="barsContainer">
+					<div class="hbar-row">
+						<div class="hbar-label">
+							<span>E-mails enviados</span>
+							<span id="barEnviadosPct">0%</span>
+						</div>
+						<div class="hbar-track">
+							<div class="hbar-fill" id="barEnviados" style="background:var(--blue);width:0%"></div>
+						</div>
+					</div>
+					<div class="hbar-row">
+						<div class="hbar-label">
+							<span>Alvos que clicaram</span>
+							<span id="barClicadosPct">0%</span>
+						</div>
+						<div class="hbar-track">
+							<div class="hbar-fill" id="barClicados" style="background:var(--red);width:0%"></div>
+						</div>
+					</div>
+					<div class="hbar-row">
+						<div class="hbar-label">
+							<span>Não clicaram</span>
+							<span id="barNaoClicadosPct">0%</span>
+						</div>
+						<div class="hbar-track">
+							<div class="hbar-fill" id="barNaoClicados" style="background:var(--green);width:0%"></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Observação de risco -->
+				<div id="riskNote" class="mt-3 d-none" style="font-size:.8rem;padding:.75rem;border-radius:8px;border-left:3px solid var(--red);background:rgba(239,68,68,.05)">
+					<strong style="color:var(--red)"><i class="bi bi-exclamation-triangle-fill me-1"></i>Atenção:</strong>
+					<span id="riskText"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Conteúdo do e-mail utilizado -->
+	<div class="section" id="secaoModeloEmail">
+		<div class="section-title">Conteúdo do e-mail utilizado na campanha</div>
+		<div id="modeloEmailContainer">
+			<div class="email-preview-header">
+				<div class="email-field"><span>Modelo: </span><strong id="mNome">—</strong></div>
+				<div class="email-field"><span>Assunto: </span><strong id="mAssunto">—</strong></div>
+				<span class="email-categoria d-none" id="mCategoria"></span>
+			</div>
+			<div class="email-iframe-wrap">
+				<iframe id="emailPreviewFrame" sandbox="allow-same-origin" title="Pré-visualização do e-mail de phishing"></iframe>
+				<div id="emailPrintContent" class="email-print-body"></div>
+			</div>
+		</div>
+		<div class="email-placeholder d-none" id="modeloEmailAusente">
+			<i class="bi bi-envelope-slash fs-3 d-block mb-2"></i>
+			Nenhum modelo de e-mail associado a esta campanha.
+		</div>
+	</div>
+
+	<!-- Tabela de alvos -->
+	<div class="section">
+		<div class="section-title">
+			Detalhamento por alvo
+			<span id="totalAlvosLabel" style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted);font-size:.78rem"></span>
+		</div>
+		<div class="table-outer" style="background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden">
+			<div class="filter-row" style="padding:.6rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
+				<input type="text" id="filtroAlvo" class="form-control form-control-sm" style="max-width:260px;font-size:.8rem"
+					placeholder="Filtrar por nome ou e-mail..." oninput="filtrarTabela()">
+				<select id="filtroStatus" class="form-select form-select-sm" style="max-width:160px;font-size:.8rem" onchange="filtrarTabela()">
+					<option value="">Todos os alvos</option>
+					<option value="clicou">Clicaram</option>
+					<option value="nao-clicou">Não clicaram</option>
+				</select>
+				<span class="ms-auto text-muted" style="font-size:.75rem">
+					Exibindo <span id="countExibindo">0</span> de <span id="countTotal">0</span>
+				</span>
+			</div>
+			<div class="table-scroll-wrap" style="overflow-x:auto">
+				<table class="targets-table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Nome</th>
+							<th>E-mail</th>
+							<th class="text-center">Enviado</th>
+							<th>Data envio</th>
+							<th class="text-center">Clicou</th>
+							<th>Data clique</th>
+						</tr>
+					</thead>
+					<tbody id="tabelaAlvos"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- Rodapé do relatório -->
+	<div class="report-footer">
+		<span class="report-footer-text">
+			<i class="bi bi-shield-lock me-1"></i>
+			Documento confidencial · Uso interno · Sentinel Security Platform
+		</span>
+		<span class="report-footer-text" id="footerGerado"></span>
+	</div>
+
+</div>
+
+<script>
+	const STATUS_LABEL = {
+		RASCUNHO: 'Rascunho', AGENDADA: 'Agendada', ENVIANDO: 'Enviando',
+		CONCLUIDA: 'Concluída', CANCELADA: 'Cancelada'
+	};
+
+	let todosAlvos = [];
+
+	(async function () {
+		const params       = new URLSearchParams(window.location.search);
+		const campanhaId   = params.get('campanha');
+
+		if (!campanhaId) {
+			document.getElementById('loadingState').innerHTML =
+				'<div class="loading-state text-danger"><i class="bi bi-x-circle fs-2 d-block mb-2"></i>Nenhum ID de campanha informado.</div>';
+			return;
+		}
+
+		try {
+			const r    = await fetch(`/security/api/phishing/relatorios/${campanhaId}/executivo`);
+			if (!r.ok) throw new Error('Campanha não encontrada.');
+			const data = await r.json();
+			renderRelatorio(data);
+		} catch (e) {
+			document.getElementById('loadingState').innerHTML =
+				`<div class="loading-state text-danger"><i class="bi bi-x-circle fs-2 d-block mb-2"></i>${e.message}</div>`;
+		}
+	})();
+
+	function renderRelatorio(data) {
+		const { campanha, estatisticas, alvos } = data;
+		const agora = new Date();
+
+		/* ── Header ── */
+		document.title = `Relatório — ${campanha.nome}`;
+		setText('rCampanhaNome', campanha.nome);
+		setText('rCliente',      campanha.cliente);
+		setText('rStatus',       STATUS_LABEL[campanha.status] || campanha.status);
+		setText('rCriadoPor',    campanha.criadoPor || '—');
+		setText('rGeradoEm',     formatarData(agora.toISOString()));
+
+		/* ── Info ── */
+		setText('rDataCriacao',   formatarData(campanha.dataCriacao));
+		setText('rDataInicio',    campanha.dataInicio    ? formatarData(campanha.dataInicio)    : 'Não iniciada');
+		setText('rDataConclusao', campanha.dataConclusao ? formatarData(campanha.dataConclusao) : 'Em andamento');
+		if (campanha.descricao) {
+			setText('rDescricao', campanha.descricao);
+			document.getElementById('rDescricaoWrap').classList.remove('d-none');
+		}
+
+		/* ── KPIs ── */
+		const { totalAlvos, enviados, clicados, naoClicados, taxaClique } = estatisticas;
+		setText('kTotalAlvos', totalAlvos);
+		setText('kEnviados',   enviados);
+		setText('kClicados',   clicados);
+		setText('kTaxa',       taxaClique.toFixed(1).replace('.0','') + '%');
+		setText('footerGerado', `Gerado em ${formatarDataLonga(agora)}`);
+
+		/* ── Donut ── */
+		const circunf = 2 * Math.PI * 55;
+		const proporcao = totalAlvos > 0 ? clicados / totalAlvos : 0;
+		const arco = proporcao * circunf;
+		requestAnimationFrame(() => {
+			document.getElementById('donutFill').setAttribute('stroke-dasharray', `${arco} ${circunf - arco}`);
+		});
+		setText('donutPct',        (taxaClique.toFixed(1).replace('.0','') + '%'));
+		setText('legendClicados',  clicados);
+		setText('legendNaoClicados', naoClicados);
+
+		/* ── Barras ── */
+		const base = totalAlvos || 1;
+		setBar('barEnviados',   enviados   / base * 100, `${((enviados   / base)*100).toFixed(0)}%`, 'barEnviadosPct');
+		setBar('barClicados',   clicados   / base * 100, `${((clicados   / base)*100).toFixed(0)}%`, 'barClicadosPct');
+		setBar('barNaoClicados',naoClicados/ base * 100, `${((naoClicados/ base)*100).toFixed(0)}%`, 'barNaoClicadosPct');
+
+		/* ── Nota de risco ── */
+		if (taxaClique >= 30) {
+			document.getElementById('riskNote').classList.remove('d-none');
+			setText('riskText', ` Taxa de clique de ${taxaClique.toFixed(1)}% — considera-se crítica quando superior a 30%. Recomenda-se ação de conscientização imediata.`);
+		} else if (taxaClique >= 15) {
+			document.getElementById('riskNote').classList.remove('d-none');
+			document.getElementById('riskNote').style.borderLeftColor = 'var(--amber)';
+			document.getElementById('riskNote').style.background = 'rgba(245,158,11,.05)';
+			document.getElementById('riskNote').querySelector('strong').style.color = 'var(--amber)';
+			setText('riskText', ` Taxa de clique de ${taxaClique.toFixed(1)}% — nível de atenção moderado. Reforce o treinamento com os alvos identificados.`);
+		}
+
+		/* ── Modelo de e-mail ── */
+		renderModeloEmail(data.modeloEmail);
+
+		/* ── Tabela ── */
+		todosAlvos = alvos;
+		setText('totalAlvosLabel', `— ${alvos.length} registros`);
+		setText('countTotal', alvos.length);
+		renderizarTabela(alvos);
+
+		/* ── Exibir ── */
+		document.getElementById('loadingState').classList.add('d-none');
+		document.getElementById('reportContent').classList.remove('d-none');
+	}
+
+	function renderModeloEmail(modelo) {
+		const container  = document.getElementById('modeloEmailContainer');
+		const ausente    = document.getElementById('modeloEmailAusente');
+		if (!modelo) {
+			container.classList.add('d-none');
+			ausente.classList.remove('d-none');
+			return;
+		}
+		container.classList.remove('d-none');
+		ausente.classList.add('d-none');
+
+		setText('mNome',    modelo.nome    || '—');
+		setText('mAssunto', modelo.assunto || '—');
+
+		const badgeEl = document.getElementById('mCategoria');
+		if (badgeEl) {
+			if (modelo.categoria) {
+				badgeEl.textContent = modelo.categoria;
+				badgeEl.classList.remove('d-none');
+			} else {
+				badgeEl.classList.add('d-none');
+			}
+		}
+
+		const html = modelo.corpoHtml || '<p style="color:#888;text-align:center;padding:2rem">Sem conteúdo HTML.</p>';
+
+		/* Versão digital: iframe sandboxed */
+		const iframe = document.getElementById('emailPreviewFrame');
+		if (iframe) {
+			iframe.srcdoc = html;
+			iframe.onload = () => {
+				try {
+					const h = iframe.contentDocument.body.scrollHeight;
+					iframe.style.height = Math.min(Math.max(h + 32, 200), 800) + 'px';
+				} catch (_) {}
+			};
+		}
+
+		/* Versão impressa: div clonado (iframes não renderizam no print) */
+		const printDiv = document.getElementById('emailPrintContent');
+		if (printDiv) { printDiv.innerHTML = html; }
+	}
+
+	function renderizarTabela(lista) {
+		const corpo = document.getElementById('tabelaAlvos');
+		corpo.innerHTML = '';
+		setText('countExibindo', lista.length);
+
+		lista.forEach((a, i) => {
+			const clicouClass = a.clicou ? 'clicou' : '';
+			corpo.insertAdjacentHTML('beforeend', `
+				<tr class="${clicouClass}">
+					<td style="color:var(--muted);width:36px">${i + 1}</td>
+					<td class="fw-semibold">${esc(a.nome)}</td>
+					<td style="color:var(--muted)">${esc(a.email)}</td>
+					<td class="text-center">
+						${a.enviado
+							? '<span class="badge-status badge-enviado"><i class="bi bi-check-circle-fill"></i>Sim</span>'
+							: '<span class="badge-status badge-pendente"><i class="bi bi-dash-circle"></i>Não</span>'}
+					</td>
+					<td>${formatarData(a.dataEnvio)}</td>
+					<td class="text-center">
+						${a.clicou
+							? '<span class="badge-status badge-clicou"><i class="bi bi-exclamation-circle-fill"></i>Sim</span>'
+							: '<span class="badge-status badge-pendente"><i class="bi bi-dash-circle"></i>Não</span>'}
+					</td>
+					<td>${formatarData(a.dataClique)}</td>
+				</tr>
+			`);
+		});
+	}
+
+	function filtrarTabela() {
+		const termo  = document.getElementById('filtroAlvo').value.toLowerCase();
+		const status = document.getElementById('filtroStatus').value;
+		const filtrado = todosAlvos.filter(a => {
+			const matchTexto  = !termo || a.nome.toLowerCase().includes(termo) || a.email.toLowerCase().includes(termo);
+			const matchStatus = !status
+				|| (status === 'clicou'     &&  a.clicou)
+				|| (status === 'nao-clicou' && !a.clicou);
+			return matchTexto && matchStatus;
+		});
+		renderizarTabela(filtrado);
+	}
+
+	/* ── Helpers ── */
+	function setText(id, val) {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val ?? '—';
+	}
+
+	function setBar(barId, pct, label, labelId) {
+		requestAnimationFrame(() => {
+			const el = document.getElementById(barId);
+			if (el) el.style.width = Math.min(pct, 100) + '%';
+			setText(labelId, label);
+		});
+	}
+
+	function formatarData(iso) {
+		if (!iso) return '—';
+		const d = new Date(iso);
+		return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+	}
+
+	function formatarDataLonga(d) {
+		return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
+			+ ' às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+	}
+
+	function esc(str) {
+		if (str == null) return '';
+		return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+	}
+</script>
+
+</body>
+</html>

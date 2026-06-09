@@ -4,25 +4,171 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" href="assets/img/favicon.ico">
-	<link rel="stylesheet" href="assets/css/defaultStyle.css">
-	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
-	<title>Sistech - ERRO</title>
+	<link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
+	<title>Sentinel — Ocorreu um erro</title>
+	<style>
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+		:root {
+			--navy:   #0f172a;
+			--border: rgba(255,255,255,.07);
+			--text:   #f1f5f9;
+			--muted:  #94a3b8;
+			--slate2: #334155;
+		}
+
+		html, body {
+			height: 100%;
+			background: var(--navy);
+			color: var(--text);
+			font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+		}
+
+		body {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			padding: 2rem 1.25rem;
+			text-align: center;
+		}
+
+		body::before {
+			content: '';
+			position: fixed; inset: 0; z-index: 0;
+			background-image:
+				linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+			background-size: 48px 48px;
+			pointer-events: none;
+		}
+
+		body::after {
+			content: '';
+			position: fixed;
+			top: -20%; left: 50%; transform: translateX(-50%);
+			width: 600px; height: 400px;
+			background: radial-gradient(ellipse, rgba(148,163,184,.06) 0%, transparent 70%);
+			pointer-events: none; z-index: 0;
+		}
+
+		.wrapper { position: relative; z-index: 1; max-width: 520px; width: 100%; }
+
+		.brand {
+			display: inline-flex; align-items: center; gap: .5rem;
+			margin-bottom: 3rem;
+		}
+		.brand-logo {
+			background: #fff; border-radius: 8px;
+			padding: 5px 11px;
+			box-shadow: 0 2px 12px rgba(0,0,0,.4);
+			display: flex; align-items: center;
+		}
+		.brand-logo img { height: 24px; display: block; }
+		.brand-name {
+			font-size: .85rem; font-weight: 700;
+			color: var(--muted); letter-spacing: .04em;
+		}
+
+		.error-icon {
+			width: 72px; height: 72px;
+			background: rgba(148,163,184,.08);
+			border: 1px solid rgba(148,163,184,.15);
+			border-radius: 20px;
+			display: inline-flex; align-items: center; justify-content: center;
+			font-size: 2rem; color: var(--muted);
+			margin: 0 auto 1.5rem;
+			animation: fadeDown .55s .05s ease both;
+		}
+
+		.error-title {
+			font-size: 1.35rem; font-weight: 700;
+			color: var(--text); margin-bottom: .6rem;
+			animation: fadeDown .55s .1s ease both;
+		}
+
+		.error-desc {
+			font-size: .92rem; color: var(--muted);
+			line-height: 1.65; margin-bottom: 2rem;
+			animation: fadeDown .55s .15s ease both;
+		}
+
+		.actions {
+			display: flex; gap: .75rem;
+			justify-content: center; flex-wrap: wrap;
+			animation: fadeDown .55s .2s ease both;
+		}
+
+		.btn-ghost {
+			display: inline-flex; align-items: center; gap: .45rem;
+			background: transparent;
+			color: var(--muted); font-size: .88rem; font-weight: 600;
+			border: 1px solid var(--border);
+			border-radius: 10px; padding: .65rem 1.4rem;
+			cursor: pointer; text-decoration: none;
+			transition: border-color .15s, color .15s, transform .12s;
+		}
+		.btn-ghost:hover {
+			border-color: rgba(255,255,255,.15);
+			color: var(--text); transform: translateY(-1px);
+		}
+
+		.divider {
+			margin: 2.5rem auto 1.5rem;
+			width: 60px; height: 1px;
+			background: var(--border);
+			animation: fadeDown .55s .25s ease both;
+		}
+
+		.page-footer {
+			font-size: .73rem; color: #475569;
+			animation: fadeDown .55s .3s ease both;
+		}
+
+		@keyframes fadeDown {
+			from { opacity: 0; transform: translateY(-10px); }
+			to   { opacity: 1; transform: translateY(0); }
+		}
+
+		@media (max-width: 480px) {
+			.brand { margin-bottom: 2rem; }
+			.btn-ghost { width: 100%; justify-content: center; }
+		}
+	</style>
 </head>
 <body>
-	<div class="container">
-			<div style="background-color: rgba(0, 0, 0, 0.2); text-align: center;">
-				<a href="#">SisTech</a>
-			</div>
-			<br /><br />
-			<h4 style="text-align: center;" >Você não possui esse acesso a esse recurso!</h4>
-			<h5 style="text-align: center;" ><a href="/sistech/home">Voltar!</a></h5>
-			<br /><br />
-			<footer>
-				<div style="background-color: rgba(0, 0, 0, 0.2); text-align: center;">
-					© 2026 Copyright:
-					<a href="#">TechGold</a>
-				</div>
-			</footer>
+
+<div class="wrapper">
+
+	<div class="brand">
+		<div class="brand-logo">
+			<img src="assets/img/p1.png" alt="ProviderOne">
+		</div>
+		<span class="brand-name">Sentinel</span>
 	</div>
+
+	<div class="error-icon">
+		<i class="bi bi-wifi-off"></i>
+	</div>
+
+	<h1 class="error-title">Algo deu errado</h1>
+	<p class="error-desc">
+		Ocorreu um erro inesperado ao processar sua solicitação.<br>
+		Tente novamente ou contate o suporte caso o problema persista.
+	</p>
+
+	<div class="actions">
+		<a href="javascript:history.back()" class="btn-ghost">
+			<i class="bi bi-arrow-left"></i> Página anterior
+		</a>
+	</div>
+
+	<div class="divider"></div>
+
+	<p class="page-footer">© 2026 TechGold · Sentinel</p>
+
+</div>
+
 </body>
 </html>
