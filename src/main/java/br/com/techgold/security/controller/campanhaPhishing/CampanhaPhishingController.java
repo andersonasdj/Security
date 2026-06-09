@@ -32,4 +32,10 @@ public class CampanhaPhishingController {
     public String config() {
         return "phishingConfig.html";
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SADMIN')")
+    @GetMapping("/educacional-config")
+    public String educacionalConfig() {
+        return "phishingEducacionalConfig.html";
+    }
 }

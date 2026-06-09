@@ -28,7 +28,9 @@ import br.com.techgold.security.dto.DtoSenha;
 import br.com.techgold.security.model.Funcionario;
 import br.com.techgold.security.orm.DtoFuncionarioEditSimplificado;
 
+import br.com.techgold.security.services.ClienteService;
 import br.com.techgold.security.services.FuncionarioService;
+import br.com.techgold.security.services.campanhaPhishing.CampanhaPhishingService;
 
 import jakarta.validation.Valid;
 
@@ -37,6 +39,8 @@ import jakarta.validation.Valid;
 public class FuncionarioRestController {
 	
 	@Autowired FuncionarioService service;
+	@Autowired ClienteService clienteService;
+	@Autowired CampanhaPhishingService campanhaService;
 	
 	@PreAuthorize("hasRole('ROLE_SADMIN')")
 	@PostMapping
@@ -66,15 +70,30 @@ public class FuncionarioRestController {
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@GetMapping("/home") //RETORNA UMA DTO COM OS DADOS PARA A HOME PAGE
 	public ResponseEntity<DtoFuncionarioHome> funcionarioHome() {
-	
-		Funcionario funcionario = service.buscaPorNome(((Funcionario) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getNomeFuncionario());
 
-		return ResponseEntity.ok().body(
-				new DtoFuncionarioHome(
-						funcionario.getNomeFuncionario(),
-						funcionario.getId()
-				));
-	}	
+		Funcionario funcionario = service.buscaPorNome(
+				((Funcionario) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getNomeFuncionario());
+
+		long totalClientes    = clienteService.listarAtivos().size();
+		long totalFuncionarios = service.existeFuncionarios();
+		long totalCampanhas   = campanhaService.listarTodas().size();
+
+		var resumos = campanhaService.buscarResumo();
+		long totalAlvos    = resumos.stream().mapToLong(r -> r.getTotalAlvos() != null ? r.getTotalAlvos() : 0).sum();
+		long totalEnviados = resumos.stream().mapToLong(r -> r.getEnviados()   != null ? r.getEnviados()   : 0).sum();
+		long totalClicados = resumos.stream().mapToLong(r -> r.getClicados()   != null ? r.getClicados()   : 0).sum();
+
+		return ResponseEntity.ok().body(new DtoFuncionarioHome(
+				funcionario.getNomeFuncionario(),
+				funcionario.getId(),
+				totalClientes,
+				totalFuncionarios,
+				totalCampanhas,
+				totalAlvos,
+				totalEnviados,
+				totalClicados
+		));
+	}
 
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@GetMapping("/nav")

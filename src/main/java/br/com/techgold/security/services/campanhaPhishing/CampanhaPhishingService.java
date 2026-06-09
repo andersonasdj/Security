@@ -62,6 +62,8 @@ public class CampanhaPhishingService {
     }
 
     public void deletar(Long id) {
+        List<AlvoCampanha> alvos = alvoRepository.findByCampanhaId(id);
+        if (!alvos.isEmpty()) alvoRepository.deleteAll(alvos);
         repository.deleteById(id);
     }
 

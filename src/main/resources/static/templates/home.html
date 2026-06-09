@@ -7,14 +7,14 @@
 	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
 	<link rel="stylesheet" href="assets/css/password-generator.css?v=1" media="print" onload="this.media='all'">
-	<link rel="stylesheet" href="assets/css/defaultStyle.css?v=1">
-	<link rel="stylesheet" href="assets/css/dark.css?v=1">
-	<link rel="stylesheet" href="assets/css/navbar.css?v=5.0">
-	<link rel="stylesheet" href="assets/css/home.css?v=8.1">
+	<link rel="stylesheet" href="assets/css/defaultStyle.css?v=1.1">
+	<link rel="stylesheet" href="assets/css/dark.css?v=3.2">
+	<link rel="stylesheet" href="assets/css/navbar.css?v=3.2">
+	<link rel="stylesheet" href="assets/css/home.css?v=3.2">
 	<title>ProviderOne Sentinel - Home</title>
 </head>
 <body>
-	<script>(function(){if(localStorage.getItem('darkMode')==='enabled')document.body.classList.add('dark-mode');document.body.dataset.layout=localStorage.getItem('navLayout')||'top';if(localStorage.getItem('sidebarCollapsed')==='true')document.body.classList.add('sidebar-collapsed');})();</script>
+	<script>(function(){if(localStorage.getItem('darkMode')==='enabled')document.body.classList.add('dark-mode');document.body.dataset.layout=localStorage.getItem('navLayout')||'side';if(localStorage.getItem('sidebarCollapsed')==='true')document.body.classList.add('sidebar-collapsed');})();</script>
 	<!-- SIDEBAR -->
 	<aside id="sidebarNav" class="sistech-sidebar">
 		<div class="sidebar-brand">
@@ -185,8 +185,221 @@
 				</div>
 			</div>
 		</nav>
-		<!-- / NAVBAR -->		
-	<br /><br />
+		<!-- / NAVBAR -->
+
+	<!-- Loading overlay -->
+	<div id="homeLoadingOverlay" style="display:none;opacity:0;pointer-events:none;"></div>
+
+	<!-- Dashboard -->
+	<div class="home-wrapper">
+
+		<!-- Hero -->
+		<div class="home-hero">
+			<div class="hero-left">
+				<div class="hero-shield"><i class="bi bi-shield-lock-fill"></i></div>
+				<div>
+					<div class="hero-title">Bem-vindo, <span id="heroNome">—</span></div>
+					<div class="hero-subtitle">ProviderOne Sentinel &mdash; Plataforma de Segurança da Informação</div>
+				</div>
+			</div>
+			<div class="hero-right">
+				<div class="hero-date" id="heroDate"></div>
+				<div class="hero-badge"><i class="bi bi-circle-fill pulse-dot"></i> Sistema Operacional</div>
+			</div>
+		</div>
+
+		<!-- KPI Row -->
+		<div class="kpi-row">
+			<div class="kpi-card kpi-blue" onclick="location.href='/security/cliente/list'" title="Ver clientes">
+				<div class="kpi-icon-wrap"><i class="bi bi-building-fill"></i></div>
+				<div class="kpi-content">
+					<div class="kpi-number" id="kpiClientes">—</div>
+					<div class="kpi-label">Clientes Ativos</div>
+				</div>
+				<div class="kpi-arrow"><i class="bi bi-arrow-right-circle"></i></div>
+			</div>
+			<div class="kpi-card kpi-green" onclick="location.href='/security/funcionario/list'" title="Ver funcionários">
+				<div class="kpi-icon-wrap"><i class="bi bi-people-fill"></i></div>
+				<div class="kpi-content">
+					<div class="kpi-number" id="kpiFuncionarios">—</div>
+					<div class="kpi-label">Funcionários</div>
+				</div>
+				<div class="kpi-arrow"><i class="bi bi-arrow-right-circle"></i></div>
+			</div>
+			<div class="kpi-card kpi-purple" onclick="location.href='/security/phishing/campanhas'" title="Ver campanhas">
+				<div class="kpi-icon-wrap"><i class="bi bi-send-fill"></i></div>
+				<div class="kpi-content">
+					<div class="kpi-number" id="kpiCampanhas">—</div>
+					<div class="kpi-label">Campanhas</div>
+				</div>
+				<div class="kpi-arrow"><i class="bi bi-arrow-right-circle"></i></div>
+			</div>
+			<div class="kpi-card kpi-red">
+				<div class="kpi-icon-wrap"><i class="bi bi-cursor-fill"></i></div>
+				<div class="kpi-content">
+					<div class="kpi-number" id="kpiTaxa">—</div>
+					<div class="kpi-label">Taxa de Cliques</div>
+				</div>
+				<div class="kpi-badge-risk" id="kpiRiskBadge"></div>
+			</div>
+		</div>
+
+		<!-- Content row: Quick Actions + Chart -->
+		<div class="home-content-row">
+
+			<!-- Quick Actions -->
+			<div class="home-panel">
+				<div class="panel-header">
+					<i class="bi bi-lightning-fill"></i>
+					<span>Ações Rápidas</span>
+				</div>
+				<div class="quick-actions-grid">
+					<a href="/security/cliente/form" class="qa-btn qa-blue">
+						<i class="bi bi-building-add"></i>
+						<span>Novo Cliente</span>
+					</a>
+					<a href="/security/funcionario/form" class="qa-btn qa-green">
+						<i class="bi bi-person-plus-fill"></i>
+						<span>Novo Funcionário</span>
+					</a>
+					<a href="/security/phishing/campanhas" class="qa-btn qa-purple">
+						<i class="bi bi-send-plus-fill"></i>
+						<span>Nova Campanha</span>
+					</a>
+					<a href="/security/phishing/modelos" class="qa-btn qa-teal">
+						<i class="bi bi-file-earmark-plus-fill"></i>
+						<span>Novo Modelo</span>
+					</a>
+					<a href="/security/phishing/relatorios" class="qa-btn qa-orange">
+						<i class="bi bi-bar-chart-fill"></i>
+						<span>Relatórios</span>
+					</a>
+					<a href="/security/phishing/config" class="qa-btn qa-gray">
+						<i class="bi bi-gear-fill"></i>
+						<span>Config SMTP</span>
+					</a>
+				</div>
+			</div>
+
+			<!-- Phishing Funnel Chart -->
+			<div class="home-panel">
+				<div class="panel-header">
+					<i class="bi bi-pie-chart-fill"></i>
+					<span>Funil de Phishing (total)</span>
+					<div class="chart-controls" id="chartControls">
+						<div class="chart-ctrl-group" id="chartTypeGroup">
+							<button class="chart-ctrl-btn" data-chart-type="donut"     title="Donut"><i class="bi bi-pie-chart"></i></button>
+							<button class="chart-ctrl-btn" data-chart-type="bar"       title="Barras"><i class="bi bi-bar-chart-horizontal"></i></button>
+							<button class="chart-ctrl-btn" data-chart-type="radialBar" title="Radial"><i class="bi bi-circle-half"></i></button>
+						</div>
+						<div class="chart-ctrl-group" id="chartPaletteGroup">
+							<button class="chart-palette-btn" data-palette="danger" title="Alerta"><span style="background:#ef4444"></span></button>
+							<button class="chart-palette-btn" data-palette="ocean"  title="Oceano"><span style="background:#3b82f6"></span></button>
+							<button class="chart-palette-btn" data-palette="mint"   title="Menta"><span style="background:#10b981"></span></button>
+						</div>
+					</div>
+				</div>
+				<div class="chart-wrapper" id="chartEmpty" style="display:none">
+					<div class="chart-empty-state">
+						<i class="bi bi-send-slash"></i>
+						<span>Nenhuma campanha registrada</span>
+					</div>
+				</div>
+				<div class="chart-wrapper" id="chartContainer">
+					<div id="chartPhishing"></div>
+				</div>
+				<div class="chart-legend" id="chartLegend"></div>
+			</div>
+
+		</div>
+
+		<!-- Stats Row -->
+		<div class="home-stats-row">
+
+			<!-- Funil Detalhado -->
+			<div class="home-panel">
+				<div class="panel-header">
+					<i class="bi bi-funnel-fill"></i>
+					<span>Funil Detalhado</span>
+				</div>
+				<div class="stats-list">
+					<div class="stat-item">
+						<div class="stat-header">
+							<span class="stat-label">Taxa de Envio</span>
+							<span class="stat-pct" id="statPctEnvio">—</span>
+						</div>
+						<div class="stat-bar-track"><div class="stat-bar-fill fill-blue" id="barEnvio"></div></div>
+						<div class="stat-detail" id="detEnvio">Aguardando dados...</div>
+					</div>
+					<div class="stat-item">
+						<div class="stat-header">
+							<span class="stat-label">Taxa de Clique (sobre enviados)</span>
+							<span class="stat-pct" id="statPctClique">—</span>
+						</div>
+						<div class="stat-bar-track"><div class="stat-bar-fill fill-red" id="barClique"></div></div>
+						<div class="stat-detail" id="detClique">Aguardando dados...</div>
+					</div>
+					<div class="stat-item">
+						<div class="stat-header">
+							<span class="stat-label">Resistência ao Phishing</span>
+							<span class="stat-pct" id="statPctResist">—</span>
+						</div>
+						<div class="stat-bar-track"><div class="stat-bar-fill fill-green" id="barResist"></div></div>
+						<div class="stat-detail" id="detResist">Aguardando dados...</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Postura de Segurança -->
+			<div class="home-panel">
+				<div class="panel-header">
+					<i class="bi bi-shield-fill-check"></i>
+					<span>Postura de Segurança</span>
+				</div>
+				<div class="postura-body">
+					<div class="postura-level">
+						<div class="postura-icon" id="posturaIcon"><i class="bi bi-shield-fill"></i></div>
+						<div class="postura-info">
+							<div class="postura-label" id="posturaLabel">Indeterminado</div>
+							<div class="postura-desc"  id="posturaDesc">Nenhuma campanha realizada ainda.</div>
+						</div>
+					</div>
+					<ul class="postura-recs" id="posturaRecs"></ul>
+				</div>
+			</div>
+
+			<!-- Boas Práticas -->
+			<div class="home-panel">
+				<div class="panel-header">
+					<i class="bi bi-lightbulb-fill"></i>
+					<span>Boas Práticas</span>
+				</div>
+				<ul class="tips-list">
+					<li class="tip-item">
+						<i class="bi bi-envelope-exclamation-fill tip-icon" style="color:#3b82f6"></i>
+						<span>Verifique sempre o remetente antes de clicar em links recebidos por e-mail.</span>
+					</li>
+					<li class="tip-item">
+						<i class="bi bi-link-45deg tip-icon" style="color:#8b5cf6"></i>
+						<span>Passe o cursor sobre links suspeitos para visualizar o endereço real antes de clicar.</span>
+					</li>
+					<li class="tip-item">
+						<i class="bi bi-key-fill tip-icon" style="color:#10b981"></i>
+						<span>Use senhas únicas e ative autenticação multifator em todos os sistemas críticos.</span>
+					</li>
+					<li class="tip-item">
+						<i class="bi bi-megaphone-fill tip-icon" style="color:#f97316"></i>
+						<span>Reporte e-mails suspeitos imediatamente ao time de segurança da informação.</span>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+		<!-- / Stats Row -->
+
+	</div>
+	<!-- / Dashboard -->
+
 	<footer class="container-fluid fixed-bottom text-center text-white">
 		<div class="text-center" style="background-color: rgba(0, 0, 0, 0.2);">
 			© 2026 Copyright:
@@ -196,9 +409,10 @@
 	<!-- Toast container -->
 	<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index:9999" id="toastContainer"></div>
 	<script defer src="assets/js/bootstrap.bundle.min.js"></script>
-	<script defer src="assets/js/dark.js?v=1.0"></script>
-	<script defer src="assets/js/navbar.js?v=1.3"></script>
-	<script defer src="assets/js/sidebar.js?v=1.0"></script>
-	<script defer src="assets/js/home.js?v=1.0"></script>
+	<script defer src="assets/js/dark.js?v=3.2"></script>
+	<script defer src="assets/js/navbar.js?v=3.2"></script>
+	<script defer src="assets/js/sidebar.js?v=3.2"></script>
+	<script defer src="assets/js/apexcharts.min.js"></script>
+	<script defer src="assets/js/home.js?v=3.2"></script>
 </body>
 </html>

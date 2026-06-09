@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="../assets/img/favicon.ico">
+	<link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/bootstrap-icons.min.css">
+	<link rel="stylesheet" href="../assets/css/defaultStyle.css?v=1.1">
+	<link rel="stylesheet" href="../assets/css/dark.css?v=1.1">
+	<link rel="stylesheet" href="../assets/css/navbar.css?v=1.1">
+	<link rel="stylesheet" href="../assets/css/home.css?v=8.1">
+	<title>SisTech - Phishing | Página Educacional</title>
+	<style>
+		.config-card { border-radius: 12px; border: 1px solid #e5e7eb; transition: box-shadow .2s; }
+		.config-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.1); }
+		body.dark-mode .config-card { border-color: #374151; }
+		.badge-ativo { background: #10b981; }
+		.badge-inativo { background: #6b7280; }
+		.color-swatch { width: 22px; height: 22px; border-radius: 5px; border: 1px solid rgba(0,0,0,.15); display: inline-block; flex-shrink: 0; }
+		.nav-tabs .nav-link { font-size: .82rem; }
+		.modal-xl { max-width: 900px; }
+		.form-label { font-size: .8rem; font-weight: 600; }
+		.section-label {
+			font-size: .7rem; font-weight: 700; text-transform: uppercase;
+			letter-spacing: .07em; color: #6b7280; margin-bottom: .5rem;
+		}
+		body.dark-mode .section-label { color: #9ca3af; }
+	</style>
+</head>
+<body>
+<script>(function(){if(localStorage.getItem('darkMode')==='enabled')document.body.classList.add('dark-mode');document.body.dataset.layout=localStorage.getItem('navLayout')||'top';if(localStorage.getItem('sidebarCollapsed')==='true')document.body.classList.add('sidebar-collapsed');})();</script>
+
+	<!-- SIDEBAR -->
+	<aside id="sidebarNav" class="sistech-sidebar">
+		<div class="sidebar-brand">
+			<div class="sidebar-brand-icon">
+				<img src="../assets/img/key.png" style="height:13px;filter:brightness(0) invert(1);">
+			</div>
+			<span class="sidebar-brand-text">Sentinel</span>
+		</div>
+		<div class="sidebar-scroll">
+			<a href="/security/home" class="sidebar-item">
+				<i class="bi bi-house-fill"></i>
+				<span class="sidebar-item-label">Início</span>
+			</a>
+			<div class="sidebar-group" id="sgClientes">
+				<button class="sidebar-group-header" onclick="toggleSidebarGroup('sgClientes')">
+					<i class="bi bi-building"></i>
+					<span class="sidebar-group-label">Clientes</span>
+					<i class="bi bi-chevron-down sidebar-chevron"></i>
+				</button>
+				<div class="sidebar-group-items">
+					<a href="/security/cliente/list" class="sidebar-subitem"><i class="bi bi-list-ul text-primary"></i>Listar</a>
+					<a href="/security/cliente/form" class="sidebar-subitem"><i class="bi bi-plus-circle text-success"></i>Novo</a>
+				</div>
+			</div>
+			<div class="sidebar-group" id="sgFuncionarios">
+				<button class="sidebar-group-header" onclick="toggleSidebarGroup('sgFuncionarios')">
+					<i class="bi bi-person-badge"></i>
+					<span class="sidebar-group-label">Funcionários</span>
+					<i class="bi bi-chevron-down sidebar-chevron"></i>
+				</button>
+				<div class="sidebar-group-items">
+					<a href="/security/funcionario/list" class="sidebar-subitem"><i class="bi bi-list-ul text-primary"></i>Listar</a>
+					<a href="/security/funcionario/form" class="sidebar-subitem"><i class="bi bi-plus-circle text-success"></i>Novo</a>
+				</div>
+			</div>
+			<div class="sidebar-group" id="sgPhishing">
+				<button class="sidebar-group-header" onclick="toggleSidebarGroup('sgPhishing')">
+					<i class="bi bi-shield-exclamation"></i>
+					<span class="sidebar-group-label">Phishing</span>
+					<i class="bi bi-chevron-down sidebar-chevron"></i>
+				</button>
+				<div class="sidebar-group-items">
+					<a href="/security/phishing/campanhas" class="sidebar-subitem"><i class="bi bi-send text-primary"></i>Campanhas</a>
+					<a href="/security/phishing/modelos" class="sidebar-subitem"><i class="bi bi-file-earmark-richtext text-secondary"></i>Modelos de E-mail</a>
+					<a href="/security/phishing/relatorios" class="sidebar-subitem"><i class="bi bi-bar-chart text-warning"></i>Relatórios</a>
+					<a href="/security/phishing/config" class="sidebar-subitem"><i class="bi bi-gear text-success"></i>Config. SMTP</a>
+					<a href="/security/phishing/educacional-config" class="sidebar-subitem active"><i class="bi bi-palette text-warning"></i>Pág. Educacional</a>
+				</div>
+			</div>
+		</div>
+		<div class="sidebar-footer">
+			<button class="sidebar-collapse-btn" id="sidebarCollapseBtn" onclick="toggleSidebarCollapse()" title="Recolher barra lateral">
+				<i class="bi bi-arrow-bar-left" id="sidebarCollapseIcon"></i>
+			</button>
+		</div>
+	</aside>
+
+	<div id="sidebarFlyout" class="sidebar-flyout">
+		<div class="sidebar-flyout-title" id="sidebarFlyoutTitle"></div>
+		<div id="sidebarFlyoutItems"></div>
+	</div>
+	<div id="sidebarOverlay" onclick="closeSidebarMobile()"></div>
+
+	<!-- SLIM TOPBAR -->
+	<div id="slimTopbar" class="sistech-slim-topbar">
+		<button class="icon-btn d-lg-none" onclick="openSidebarMobile()" title="Menu" style="font-size:1.1rem;">
+			<i class="bi bi-list"></i>
+		</button>
+		<span style="font-size:.8rem;font-weight:600;color:#374151;" class="d-none d-sm-inline" id="slimTopbarTitle">ProviderOne Sentinel - TREINANDO PESSOAS, FORTALEÇENDO A SEGURANÇA</span>
+		<div class="ms-auto d-flex align-items-center gap-2">
+			<button class="layout-toggle-btn" onclick="toggleLayout()" title="Voltar ao navbar no topo"><i class="bi bi-layout-three-columns"></i></button>
+			<button class="icon-btn" onclick="toggleDarkMode()" title="Alternar modo escuro"><i class="bi bi-moon"></i></button>
+			<div class="dropdown">
+				<button class="user-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<div class="user-avatar" id="userInitialsSlim">?</div>
+					<span class="user-name d-none d-md-inline" id="navNomeSlim">Usuário</span>
+					<i class="bi bi-chevron-down nav-chevron"></i>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end">
+					<li><a class="dropdown-item" href="/security/funcionario/perfil"><i class="bi bi-person me-2"></i>Perfil</a></li>
+					<li><hr class="dropdown-divider"></li>
+					<li><a class="dropdown-item text-danger" href="/security/logout"><i class="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<!-- NAVBAR -->
+		<nav class="navbar navbar-expand-lg navbar-modern sticky-top mb-2">
+			<div class="container-fluid px-3">
+				<a class="navbar-brand-modern" href="/security/home">
+					<div class="brand-icon"><img src="../assets/img/key.png" style="height:30px;"></div>
+					<span class="brand-text">Sentinel</span>
+				</a>
+				<button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarMain">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 align-items-lg-center">
+						<li class="nav-item"><a class="nav-link-modern" href="/security/home"><i class="bi bi-house-fill"></i> Início</a></li>
+						<li class="nav-item dropdown">
+							<a class="nav-link-modern dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-building"></i> Clientes</a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/security/cliente/list"><i class="bi bi-list-ul me-2 text-primary"></i>Listar</a></li>
+								<li><a class="dropdown-item" href="/security/cliente/form"><i class="bi bi-plus-circle me-2 text-success"></i>Novo</a></li>
+							</ul>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link-modern dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-person-badge"></i> Funcionários</a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/security/funcionario/list"><i class="bi bi-list-ul me-2 text-primary"></i>Listar</a></li>
+								<li><a class="dropdown-item" href="/security/funcionario/form"><i class="bi bi-plus-circle me-2 text-success"></i>Novo</a></li>
+							</ul>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link-modern dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-shield-exclamation"></i> Phishing</a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/security/phishing/campanhas"><i class="bi bi-send me-2 text-primary"></i>Campanhas</a></li>
+								<li><a class="dropdown-item" href="/security/phishing/modelos"><i class="bi bi-file-earmark-richtext me-2 text-secondary"></i>Modelos de E-mail</a></li>
+								<li><a class="dropdown-item" href="/security/phishing/relatorios"><i class="bi bi-bar-chart me-2 text-warning"></i>Relatórios</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item" href="/security/phishing/config"><i class="bi bi-gear me-2 text-success"></i>Config. SMTP</a></li>
+								<li><a class="dropdown-item active" href="/security/phishing/educacional-config"><i class="bi bi-palette me-2 text-warning"></i>Pág. Educacional</a></li>
+							</ul>
+						</li>
+					</ul>
+					<div class="d-flex align-items-center gap-2">
+						<button class="layout-toggle-btn" onclick="toggleLayout()" title="Alternar para barra lateral"><i class="bi bi-layout-sidebar"></i></button>
+						<button class="icon-btn" onclick="toggleDarkMode()" title="Alternar modo escuro"><i class="bi bi-moon"></i></button>
+						<div class="dropdown">
+							<button class="user-btn" type="button" data-bs-toggle="dropdown">
+								<div class="user-avatar" id="userInitials">?</div>
+								<span class="user-name" id="navNome">Usuário</span>
+								<i class="bi bi-chevron-down nav-chevron"></i>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-end">
+								<li><a class="dropdown-item" href="/security/funcionario/perfil"><i class="bi bi-person me-2"></i>Perfil</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item text-danger" href="/security/logout"><i class="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<div class="px-2 px-md-3">
+			<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+				<div>
+					<h5 class="mb-0 fw-bold"><i class="bi bi-palette me-2 text-warning"></i>Phishing — Página Educacional</h5>
+					<small class="text-muted">Personalize cores, textos, caixas de avisos e visibilidade da página exibida após o clique no link de phishing</small>
+				</div>
+				<div class="d-flex gap-2">
+					<a href="/security/phishing/phishingEducacional.html" target="_blank" class="btn btn-outline-secondary btn-sm">
+						<i class="bi bi-eye me-1"></i>Visualizar página
+					</a>
+					<button class="btn btn-warning btn-sm" onclick="abrirModalNovo()">
+						<i class="bi bi-plus-circle me-1"></i>Novo perfil
+					</button>
+				</div>
+			</div>
+
+			<div class="row g-3" id="listaConfigs"></div>
+			<div class="text-center text-muted small mt-3 d-none" id="msgVazio">
+				<i class="bi bi-palette fs-3 d-block mb-1"></i>Nenhum perfil de configuração cadastrado.
+			</div>
+		</div>
+	</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL CRIAR / EDITAR
+════════════════════════════════════════════════════════ -->
+<div class="modal fade" id="modalConfig" tabindex="-1">
+	<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title" id="tituloModal"><i class="bi bi-palette me-2"></i>Novo perfil</h6>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body p-0">
+				<input type="hidden" id="cfgId">
+
+				<!-- Tabs -->
+				<ul class="nav nav-tabs px-3 pt-2" id="configTabs">
+					<li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabGeral">Geral</button></li>
+					<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabCores">Cores</button></li>
+					<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabHero">Hero</button></li>
+					<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabConteudo">Conteúdo</button></li>
+					<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabStats">Estatísticas</button></li>
+					<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabDicas">Dicas</button></li>
+					<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPassos">Passos</button></li>
+				</ul>
+
+				<div class="tab-content p-3">
+
+					<!-- TAB GERAL -->
+					<div class="tab-pane fade show active" id="tabGeral">
+						<div class="row g-3">
+							<div class="col-md-6">
+								<label class="form-label">Nome do perfil <span class="text-danger">*</span></label>
+								<input type="text" class="form-control form-control-sm" id="cfgNome" placeholder="Ex.: Padrão, Cliente ABC...">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Nome da empresa (topbar)</label>
+								<input type="text" class="form-control form-control-sm" id="cfgNomeEmpresa" placeholder="Sentinel">
+							</div>
+							<div class="col-12">
+								<div class="section-label">Visibilidade das seções</div>
+								<div class="d-flex flex-wrap gap-3">
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" id="cfgExibirStats" checked>
+										<label class="form-check-label small" for="cfgExibirStats">Exibir estatísticas</label>
+									</div>
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" id="cfgExibirExplicacao" checked>
+										<label class="form-check-label small" for="cfgExibirExplicacao">Exibir caixa de explicação</label>
+									</div>
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" id="cfgExibirTips" checked>
+										<label class="form-check-label small" for="cfgExibirTips">Exibir dicas</label>
+									</div>
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" id="cfgExibirAcao" checked>
+										<label class="form-check-label small" for="cfgExibirAcao">Exibir passos de ação</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- TAB CORES -->
+					<div class="tab-pane fade" id="tabCores">
+						<p class="small text-muted mb-3">Defina as cores principais da página. Deixe em branco para usar o padrão.</p>
+						<div class="row g-3">
+							<div class="col-md-4">
+								<label class="form-label">Cor de destaque</label>
+								<div class="input-group input-group-sm">
+									<input type="color" class="form-control form-control-color p-1" id="cfgCorDestaquePickr" value="#ef4444" style="width:44px; flex-shrink:0;">
+									<input type="text" class="form-control form-control-sm" id="cfgCorDestaque" placeholder="#ef4444" maxlength="20">
+								</div>
+								<div class="form-text">Badge, bordas, ícones de alerta</div>
+							</div>
+							<div class="col-md-4">
+								<label class="form-label">Hero — cor gradiente 1</label>
+								<div class="input-group input-group-sm">
+									<input type="color" class="form-control form-control-color p-1" id="cfgCorHero1Pickr" value="#1a0a0a" style="width:44px; flex-shrink:0;">
+									<input type="text" class="form-control form-control-sm" id="cfgCorHero1" placeholder="#1a0a0a" maxlength="20">
+								</div>
+								<div class="form-text">Início do gradiente de fundo</div>
+							</div>
+							<div class="col-md-4">
+								<label class="form-label">Hero — cor gradiente 2</label>
+								<div class="input-group input-group-sm">
+									<input type="color" class="form-control form-control-color p-1" id="cfgCorHero2Pickr" value="#200808" style="width:44px; flex-shrink:0;">
+									<input type="text" class="form-control form-control-sm" id="cfgCorHero2" placeholder="#200808" maxlength="20">
+								</div>
+								<div class="form-text">Meio do gradiente de fundo</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- TAB HERO -->
+					<div class="tab-pane fade" id="tabHero">
+						<p class="small text-muted mb-3">Textos exibidos no topo da página educacional. Deixe em branco para usar o padrão.</p>
+						<div class="row g-3">
+							<div class="col-md-6">
+								<label class="form-label">Texto do badge</label>
+								<input type="text" class="form-control form-control-sm" id="cfgHeroBadge" placeholder="Simulação de Phishing">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Texto de segurança (chip verde)</label>
+								<input type="text" class="form-control form-control-sm" id="cfgHeroTextoSeg" placeholder="Seus dados estão seguros — é apenas um exercício">
+							</div>
+							<div class="col-md-8">
+								<label class="form-label">Título principal (antes do destaque)</label>
+								<input type="text" class="form-control form-control-sm" id="cfgHeroTitulo" placeholder="Você acabou de clicar em um">
+								<div class="form-text">Use \n para quebra de linha. Ex.: "Você acabou de clicar\nem um"</div>
+							</div>
+							<div class="col-md-4">
+								<label class="form-label">Palavra em destaque <span class="text-danger">*</span></label>
+								<input type="text" class="form-control form-control-sm" id="cfgHeroDestaque" placeholder="link de phishing">
+								<div class="form-text">Aparece em vermelho no título</div>
+							</div>
+							<div class="col-12">
+								<label class="form-label">Subtítulo</label>
+								<textarea class="form-control form-control-sm" id="cfgHeroSub" rows="2" placeholder="Esta é uma simulação interna de conscientização..."></textarea>
+							</div>
+						</div>
+					</div>
+
+					<!-- TAB CONTEÚDO -->
+					<div class="tab-pane fade" id="tabConteudo">
+						<div class="row g-3">
+							<div class="col-12">
+								<label class="form-label">Texto da caixa de explicação</label>
+								<textarea class="form-control form-control-sm" id="cfgExplicacao" rows="5" placeholder="Esse exercício faz parte do programa de conscientização..."></textarea>
+								<div class="form-text">HTML básico permitido: &lt;strong&gt;, &lt;em&gt;</div>
+							</div>
+							<div class="col-12">
+								<label class="form-label">Texto do rodapé</label>
+								<input type="text" class="form-control form-control-sm" id="cfgFooter" placeholder="Simulação interna de phishing educacional. Dúvidas? Contate a equipe de SI.">
+							</div>
+						</div>
+					</div>
+
+					<!-- TAB ESTATÍSTICAS -->
+					<div class="tab-pane fade" id="tabStats">
+						<p class="small text-muted mb-3">Três caixas de números na parte superior do conteúdo. Deixe em branco para usar o padrão.</p>
+						<div class="row g-3">
+							<!-- Stat 1 -->
+							<div class="col-12"><div class="section-label">Estatística 1</div></div>
+							<div class="col-md-3">
+								<label class="form-label">Valor</label>
+								<input type="text" class="form-control form-control-sm" id="cfgStat1Valor" placeholder="91%">
+							</div>
+							<div class="col-md-7">
+								<label class="form-label">Descrição</label>
+								<input type="text" class="form-control form-control-sm" id="cfgStat1Label" placeholder="dos ataques reais começam por e-mail">
+							</div>
+							<div class="col-md-2">
+								<label class="form-label">Cor</label>
+								<div class="input-group input-group-sm">
+									<input type="color" class="form-control form-control-color p-1" id="cfgStat1CorPickr" value="#ef4444" style="width:38px; flex-shrink:0;">
+									<input type="text" class="form-control" id="cfgStat1Cor" placeholder="#ef4444" maxlength="20">
+								</div>
+							</div>
+							<!-- Stat 2 -->
+							<div class="col-12"><div class="section-label">Estatística 2</div></div>
+							<div class="col-md-3">
+								<label class="form-label">Valor</label>
+								<input type="text" class="form-control form-control-sm" id="cfgStat2Valor" placeholder="3,4 bi">
+							</div>
+							<div class="col-md-7">
+								<label class="form-label">Descrição</label>
+								<input type="text" class="form-control form-control-sm" id="cfgStat2Label" placeholder="e-mails de phishing disparados por dia no mundo">
+							</div>
+							<div class="col-md-2">
+								<label class="form-label">Cor</label>
+								<div class="input-group input-group-sm">
+									<input type="color" class="form-control form-control-color p-1" id="cfgStat2CorPickr" value="#f97316" style="width:38px; flex-shrink:0;">
+									<input type="text" class="form-control" id="cfgStat2Cor" placeholder="#f97316" maxlength="20">
+								</div>
+							</div>
+							<!-- Stat 3 -->
+							<div class="col-12"><div class="section-label">Estatística 3</div></div>
+							<div class="col-md-3">
+								<label class="form-label">Valor</label>
+								<input type="text" class="form-control form-control-sm" id="cfgStat3Valor" placeholder="5×">
+							</div>
+							<div class="col-md-7">
+								<label class="form-label">Descrição</label>
+								<input type="text" class="form-control form-control-sm" id="cfgStat3Label" placeholder="mais eficaz após treinamento de conscientização">
+							</div>
+							<div class="col-md-2">
+								<label class="form-label">Cor</label>
+								<div class="input-group input-group-sm">
+									<input type="color" class="form-control form-control-color p-1" id="cfgStat3CorPickr" value="#10b981" style="width:38px; flex-shrink:0;">
+									<input type="text" class="form-control" id="cfgStat3Cor" placeholder="#10b981" maxlength="20">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- TAB DICAS -->
+					<div class="tab-pane fade" id="tabDicas">
+						<p class="small text-muted mb-3">Quatro cartões de dica exibidos na grade. Deixe em branco para usar o padrão.</p>
+						<div class="row g-3">
+							<div class="col-12"><div class="section-label">Dica 1 — Remetente suspeito</div></div>
+							<div class="col-md-4">
+								<label class="form-label">Título</label>
+								<input type="text" class="form-control form-control-sm" id="cfgTip1T" placeholder="Remetente suspeito">
+							</div>
+							<div class="col-md-8">
+								<label class="form-label">Texto</label>
+								<textarea class="form-control form-control-sm" id="cfgTip1X" rows="2" placeholder="Confira o endereço completo..."></textarea>
+							</div>
+
+							<div class="col-12"><div class="section-label">Dica 2 — Links disfarçados</div></div>
+							<div class="col-md-4">
+								<label class="form-label">Título</label>
+								<input type="text" class="form-control form-control-sm" id="cfgTip2T" placeholder="Links disfarçados">
+							</div>
+							<div class="col-md-8">
+								<label class="form-label">Texto</label>
+								<textarea class="form-control form-control-sm" id="cfgTip2X" rows="2" placeholder="Passe o cursor sobre o link..."></textarea>
+							</div>
+
+							<div class="col-12"><div class="section-label">Dica 3 — Urgência e pressão</div></div>
+							<div class="col-md-4">
+								<label class="form-label">Título</label>
+								<input type="text" class="form-control form-control-sm" id="cfgTip3T" placeholder="Urgência e pressão">
+							</div>
+							<div class="col-md-8">
+								<label class="form-label">Texto</label>
+								<textarea class="form-control form-control-sm" id="cfgTip3X" rows="2" placeholder="Mensagens que pedem ação imediata..."></textarea>
+							</div>
+
+							<div class="col-12"><div class="section-label">Dica 4 — Pedidos de dados sensíveis</div></div>
+							<div class="col-md-4">
+								<label class="form-label">Título</label>
+								<input type="text" class="form-control form-control-sm" id="cfgTip4T" placeholder="Pedidos de dados sensíveis">
+							</div>
+							<div class="col-md-8">
+								<label class="form-label">Texto</label>
+								<textarea class="form-control form-control-sm" id="cfgTip4X" rows="2" placeholder="Empresas sérias nunca solicitam senhas..."></textarea>
+							</div>
+						</div>
+					</div>
+
+					<!-- TAB PASSOS DE AÇÃO -->
+					<div class="tab-pane fade" id="tabPassos">
+						<p class="small text-muted mb-3">Caixa verde de orientação ao final do conteúdo. Deixe em branco para usar o padrão.</p>
+						<div class="row g-3">
+							<div class="col-12">
+								<label class="form-label">Título da seção</label>
+								<input type="text" class="form-control form-control-sm" id="cfgAcaoTitulo" placeholder="O que fazer ao suspeitar de um e-mail">
+							</div>
+							<div class="col-12"><div class="section-label">Passo 1</div></div>
+							<div class="col-12">
+								<textarea class="form-control form-control-sm" id="cfgPasso1" rows="2" placeholder="Não clique em links nem baixe anexos da mensagem suspeita."></textarea>
+							</div>
+							<div class="col-12"><div class="section-label">Passo 2</div></div>
+							<div class="col-12">
+								<textarea class="form-control form-control-sm" id="cfgPasso2" rows="2" placeholder="Não responda ao remetente nem forneça nenhuma informação."></textarea>
+							</div>
+							<div class="col-12"><div class="section-label">Passo 3</div></div>
+							<div class="col-12">
+								<textarea class="form-control form-control-sm" id="cfgPasso3" rows="2" placeholder="Reporte imediatamente para a equipe de Segurança da Informação."></textarea>
+							</div>
+							<div class="col-12"><div class="section-label">Passo 4</div></div>
+							<div class="col-12">
+								<textarea class="form-control form-control-sm" id="cfgPasso4" rows="2" placeholder="Em caso de dúvida, pergunte antes de agir."></textarea>
+							</div>
+						</div>
+					</div>
+
+				</div><!-- /tab-content -->
+
+				<div class="alert alert-danger mx-3 mb-3 small d-none" id="erroForm"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-warning btn-sm" onclick="salvar()">
+					<i class="bi bi-check-circle me-1"></i>Salvar perfil
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- MODAL: Confirmar exclusão -->
+<div class="modal fade" id="modalExcluir" tabindex="-1">
+	<div class="modal-dialog modal-sm modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body text-center p-4">
+				<i class="bi bi-exclamation-triangle text-danger fs-1"></i>
+				<p class="mt-2">Excluir este perfil de configuração?</p>
+				<p class="text-danger small fw-semibold" id="nomeExcluir"></p>
+			</div>
+			<div class="modal-footer justify-content-center border-0 pt-0">
+				<button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+				<button class="btn btn-danger btn-sm" onclick="confirmarExcluir()">Excluir</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script defer src="../assets/js/bootstrap.bundle.min.js"></script>
+<script defer src="../assets/js/dark.js"></script>
+<script defer src="../assets/js/navbar.js?v=1.5"></script>
+<script defer src="../assets/js/sidebar.js?v=1.5"></script>
+<script>
+	let todasConfigs = [];
+	let excluirId = null;
+	let modalConfig, modalExcluir;
+
+	document.addEventListener('DOMContentLoaded', () => {
+		modalConfig  = new bootstrap.Modal(document.getElementById('modalConfig'));
+		modalExcluir = new bootstrap.Modal(document.getElementById('modalExcluir'));
+		carregarUsuarioNav();
+		carregarConfigs();
+		vincularColorPickers();
+	});
+
+	/* ─── Nav ─── */
+	async function carregarUsuarioNav() {
+		try {
+			const r = await fetch('/security/funcionarios/home');
+			if (r.status === 401) { window.location.href = '/security/login'; return; }
+			const d = await r.json();
+			const nome = d.nomeFuncionario || '';
+			const ini  = (nome || '?').charAt(0).toUpperCase();
+			['navNome','navNomeSlim'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = nome; });
+			['userInitials','userInitialsSlim'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ini; });
+		} catch(e) {}
+	}
+
+	/* ─── Lista ─── */
+	async function carregarConfigs() {
+		try {
+			const r   = await fetch('/security/api/phishing/pagina-config');
+			todasConfigs = await r.json();
+			renderLista(todasConfigs);
+		} catch(e) { console.error(e); }
+	}
+
+	function renderLista(lista) {
+		const cont = document.getElementById('listaConfigs');
+		const vazio = document.getElementById('msgVazio');
+		cont.innerHTML = '';
+		vazio.classList.toggle('d-none', lista.length > 0);
+
+		lista.forEach(c => {
+			const swatch = (hex, def) => hex ? `<span class="color-swatch" style="background:${esc(hex)}" title="${esc(hex)}"></span>` : `<span class="color-swatch" style="background:${def}" title="${def} (padrão)"></span>`;
+			cont.insertAdjacentHTML('beforeend', `
+				<div class="col-md-6 col-xl-4">
+					<div class="card config-card h-100">
+						<div class="card-body">
+							<div class="d-flex justify-content-between align-items-start mb-2">
+								<div>
+									<h6 class="mb-0 fw-bold">${esc(c.nome)}</h6>
+									<small class="text-muted">${esc(c.nomeEmpresa || 'Sentinel')} · criado em ${c.dataCriacao ? c.dataCriacao.substring(0,10) : '—'}</small>
+								</div>
+								<span class="badge ${c.ativo ? 'badge-ativo' : 'badge-inativo'}">${c.ativo ? 'Ativo' : 'Inativo'}</span>
+							</div>
+							<div class="d-flex align-items-center gap-2 mb-1">
+								<small class="text-muted">Cores:</small>
+								${swatch(c.corDestaque,'#ef4444')}
+								${swatch(c.corHero1,'#1a0a0a')}
+								${swatch(c.corHero2,'#200808')}
+							</div>
+							<div class="d-flex flex-wrap gap-1 mt-2">
+								${c.exibirStats ? '<span class="badge bg-secondary" style="font-size:.65rem">Stats</span>' : ''}
+								${c.exibirExplicacao ? '<span class="badge bg-secondary" style="font-size:.65rem">Explicação</span>' : ''}
+								${c.exibirTips ? '<span class="badge bg-secondary" style="font-size:.65rem">Dicas</span>' : ''}
+								${c.exibirAcao ? '<span class="badge bg-secondary" style="font-size:.65rem">Passos</span>' : ''}
+							</div>
+						</div>
+						<div class="card-footer bg-transparent border-0 d-flex justify-content-end gap-2 flex-wrap">
+							${!c.ativo ? `<button class="btn btn-outline-success btn-sm" onclick="ativar(${c.id})"><i class="bi bi-check-circle me-1"></i>Ativar</button>` : '<span class="badge badge-ativo align-self-center"><i class="bi bi-check-circle me-1"></i>Em uso</span>'}
+							<button class="btn btn-outline-secondary btn-sm" onclick="abrirEdicao(${c.id})"><i class="bi bi-pencil"></i></button>
+							<button class="btn btn-outline-danger btn-sm" onclick="abrirExcluir(${c.id}, '${esc(c.nome).replace(/'/g,"\\'")}')"><i class="bi bi-trash"></i></button>
+						</div>
+					</div>
+				</div>
+			`);
+		});
+	}
+
+	/* ─── Color pickers ─── */
+	function vincularColorPickers() {
+		const pares = [
+			['cfgCorDestaquePickr','cfgCorDestaque'],
+			['cfgCorHero1Pickr','cfgCorHero1'],
+			['cfgCorHero2Pickr','cfgCorHero2'],
+			['cfgStat1CorPickr','cfgStat1Cor'],
+			['cfgStat2CorPickr','cfgStat2Cor'],
+			['cfgStat3CorPickr','cfgStat3Cor'],
+		];
+		pares.forEach(([pickrId, txtId]) => {
+			const pickr = document.getElementById(pickrId);
+			const txt   = document.getElementById(txtId);
+			if (!pickr || !txt) return;
+			pickr.addEventListener('input', () => { txt.value = pickr.value; });
+			txt.addEventListener('input',  () => { if (/^#[0-9a-fA-F]{6}$/.test(txt.value)) pickr.value = txt.value; });
+		});
+	}
+
+	function syncPickrsFromValues() {
+		const pares = [
+			['cfgCorDestaquePickr','cfgCorDestaque'],
+			['cfgCorHero1Pickr','cfgCorHero1'],
+			['cfgCorHero2Pickr','cfgCorHero2'],
+			['cfgStat1CorPickr','cfgStat1Cor'],
+			['cfgStat2CorPickr','cfgStat2Cor'],
+			['cfgStat3CorPickr','cfgStat3Cor'],
+		];
+		pares.forEach(([pickrId, txtId]) => {
+			const pickr = document.getElementById(pickrId);
+			const txt   = document.getElementById(txtId);
+			if (pickr && txt && /^#[0-9a-fA-F]{6}$/.test(txt.value)) pickr.value = txt.value;
+		});
+	}
+
+	/* ─── Modal Novo ─── */
+	function abrirModalNovo() {
+		document.getElementById('tituloModal').innerHTML = '<i class="bi bi-palette me-2"></i>Novo perfil';
+		limparForm();
+		document.getElementById('erroForm').classList.add('d-none');
+		modalConfig.show();
+	}
+
+	/* ─── Modal Edição ─── */
+	function abrirEdicao(id) {
+		const c = todasConfigs.find(x => x.id === id);
+		if (!c) return;
+		document.getElementById('tituloModal').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar perfil';
+		document.getElementById('cfgId').value = c.id;
+		set('cfgNome',          c.nome);
+		set('cfgNomeEmpresa',   c.nomeEmpresa);
+		set('cfgHeroBadge',     c.heroBadgeText);
+		set('cfgHeroTitulo',    c.heroTitulo);
+		set('cfgHeroDestaque',  c.heroTituloDestaque);
+		set('cfgHeroSub',       c.heroSubtitulo);
+		set('cfgHeroTextoSeg',  c.heroTextoSeguranca);
+		set('cfgExplicacao',    c.textoExplicacao);
+		set('cfgFooter',        c.textoFooter);
+		set('cfgStat1Valor',    c.stat1Valor); set('cfgStat1Label', c.stat1Label); set('cfgStat1Cor', c.stat1Cor);
+		set('cfgStat2Valor',    c.stat2Valor); set('cfgStat2Label', c.stat2Label); set('cfgStat2Cor', c.stat2Cor);
+		set('cfgStat3Valor',    c.stat3Valor); set('cfgStat3Label', c.stat3Label); set('cfgStat3Cor', c.stat3Cor);
+		set('cfgTip1T', c.tip1Titulo); set('cfgTip1X', c.tip1Texto);
+		set('cfgTip2T', c.tip2Titulo); set('cfgTip2X', c.tip2Texto);
+		set('cfgTip3T', c.tip3Titulo); set('cfgTip3X', c.tip3Texto);
+		set('cfgTip4T', c.tip4Titulo); set('cfgTip4X', c.tip4Texto);
+		set('cfgAcaoTitulo', c.acaoTitulo);
+		set('cfgPasso1', c.acaoPasso1); set('cfgPasso2', c.acaoPasso2);
+		set('cfgPasso3', c.acaoPasso3); set('cfgPasso4', c.acaoPasso4);
+		set('cfgCorDestaque', c.corDestaque); set('cfgCorHero1', c.corHero1); set('cfgCorHero2', c.corHero2);
+		chk('cfgExibirStats',      c.exibirStats);
+		chk('cfgExibirExplicacao', c.exibirExplicacao);
+		chk('cfgExibirTips',       c.exibirTips);
+		chk('cfgExibirAcao',       c.exibirAcao);
+		syncPickrsFromValues();
+		document.getElementById('erroForm').classList.add('d-none');
+		modalConfig.show();
+	}
+
+	function set(id, val) { const el = document.getElementById(id); if (el) el.value = val || ''; }
+	function chk(id, val) { const el = document.getElementById(id); if (el) el.checked = !!val; }
+
+	function limparForm() {
+		['cfgId','cfgNome','cfgNomeEmpresa','cfgHeroBadge','cfgHeroTitulo','cfgHeroDestaque',
+		 'cfgHeroSub','cfgHeroTextoSeg','cfgExplicacao','cfgFooter',
+		 'cfgStat1Valor','cfgStat1Label','cfgStat1Cor',
+		 'cfgStat2Valor','cfgStat2Label','cfgStat2Cor',
+		 'cfgStat3Valor','cfgStat3Label','cfgStat3Cor',
+		 'cfgTip1T','cfgTip1X','cfgTip2T','cfgTip2X','cfgTip3T','cfgTip3X','cfgTip4T','cfgTip4X',
+		 'cfgAcaoTitulo','cfgPasso1','cfgPasso2','cfgPasso3','cfgPasso4',
+		 'cfgCorDestaque','cfgCorHero1','cfgCorHero2'
+		].forEach(id => set(id, ''));
+		['cfgExibirStats','cfgExibirExplicacao','cfgExibirTips','cfgExibirAcao'].forEach(id => chk(id, true));
+	}
+
+	/* ─── Salvar ─── */
+	async function salvar() {
+		const id      = document.getElementById('cfgId').value;
+		const erroEl  = document.getElementById('erroForm');
+		erroEl.classList.add('d-none');
+
+		const nome = document.getElementById('cfgNome').value.trim();
+		if (!nome) {
+			erroEl.textContent = 'O nome do perfil é obrigatório.';
+			erroEl.classList.remove('d-none');
+			return;
+		}
+
+		const dados = {
+			nome,
+			nomeEmpresa:         v('cfgNomeEmpresa'),
+			heroBadgeText:       v('cfgHeroBadge'),
+			heroTitulo:          v('cfgHeroTitulo'),
+			heroTituloDestaque:  v('cfgHeroDestaque'),
+			heroSubtitulo:       v('cfgHeroSub'),
+			heroTextoSeguranca:  v('cfgHeroTextoSeg'),
+			textoExplicacao:     v('cfgExplicacao'),
+			textoFooter:         v('cfgFooter'),
+			stat1Valor:  v('cfgStat1Valor'), stat1Label: v('cfgStat1Label'), stat1Cor: v('cfgStat1Cor'),
+			stat2Valor:  v('cfgStat2Valor'), stat2Label: v('cfgStat2Label'), stat2Cor: v('cfgStat2Cor'),
+			stat3Valor:  v('cfgStat3Valor'), stat3Label: v('cfgStat3Label'), stat3Cor: v('cfgStat3Cor'),
+			tip1Titulo:  v('cfgTip1T'), tip1Texto: v('cfgTip1X'),
+			tip2Titulo:  v('cfgTip2T'), tip2Texto: v('cfgTip2X'),
+			tip3Titulo:  v('cfgTip3T'), tip3Texto: v('cfgTip3X'),
+			tip4Titulo:  v('cfgTip4T'), tip4Texto: v('cfgTip4X'),
+			acaoTitulo:  v('cfgAcaoTitulo'),
+			acaoPasso1:  v('cfgPasso1'), acaoPasso2: v('cfgPasso2'),
+			acaoPasso3:  v('cfgPasso3'), acaoPasso4: v('cfgPasso4'),
+			corDestaque: v('cfgCorDestaque'), corHero1: v('cfgCorHero1'), corHero2: v('cfgCorHero2'),
+			exibirStats:      document.getElementById('cfgExibirStats').checked,
+			exibirExplicacao: document.getElementById('cfgExibirExplicacao').checked,
+			exibirTips:       document.getElementById('cfgExibirTips').checked,
+			exibirAcao:       document.getElementById('cfgExibirAcao').checked,
+		};
+
+		const url    = id ? `/security/api/phishing/pagina-config/${id}` : '/security/api/phishing/pagina-config';
+		const method = id ? 'PUT' : 'POST';
+
+		try {
+			const r = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(dados) });
+			const corpo = await r.json();
+			if (!r.ok) throw new Error(corpo.erro || 'Erro ao salvar');
+			modalConfig.hide();
+			carregarConfigs();
+		} catch(e) {
+			erroEl.textContent = e.message;
+			erroEl.classList.remove('d-none');
+		}
+	}
+
+	function v(id) { return (document.getElementById(id)?.value || '').trim(); }
+
+	/* ─── Ativar ─── */
+	async function ativar(id) {
+		try {
+			const r = await fetch(`/security/api/phishing/pagina-config/${id}/ativar`, { method: 'POST' });
+			if (!r.ok) throw new Error('Erro ao ativar');
+			carregarConfigs();
+		} catch(e) { alert(e.message); }
+	}
+
+	/* ─── Excluir ─── */
+	function abrirExcluir(id, nome) {
+		excluirId = id;
+		document.getElementById('nomeExcluir').textContent = nome;
+		modalExcluir.show();
+	}
+
+	async function confirmarExcluir() {
+		if (!excluirId) return;
+		try {
+			const r = await fetch(`/security/api/phishing/pagina-config/${excluirId}`, { method: 'DELETE' });
+			if (!r.ok && r.status !== 204) throw new Error('Erro ao excluir');
+			modalExcluir.hide();
+			carregarConfigs();
+		} catch(e) { alert(e.message); }
+	}
+
+	function esc(str) {
+		if (str == null) return '';
+		return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+	}
+</script>
+</body>
+</html>

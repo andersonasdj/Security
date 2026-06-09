@@ -67,8 +67,9 @@
 					<a href="/security/phishing/modelos" class="sidebar-subitem"><i class="bi bi-file-earmark-richtext text-secondary"></i>Modelos de E-mail</a>
 					<a href="/security/phishing/relatorios" class="sidebar-subitem"><i class="bi bi-bar-chart text-warning"></i>Relatórios</a>
 					<a href="/security/phishing/config" class="sidebar-subitem"><i class="bi bi-gear text-success"></i>Configuração SMTP</a>
+					<a href="/security/phishing/educacional-config" class="sidebar-subitem"><i class="bi bi-palette text-warning"></i>Pág. Educacional</a>
 				</div>
-			</div>	
+			</div>
 		</div>
 		<div class="sidebar-footer">
 			<button class="sidebar-collapse-btn" id="sidebarCollapseBtn" onclick="toggleSidebarCollapse()" title="Recolher barra lateral">
@@ -88,7 +89,7 @@
 		<button class="icon-btn d-lg-none" onclick="openSidebarMobile()" title="Menu" style="font-size:1.1rem;">
 			<i class="bi bi-list"></i>
 		</button>
-		<span style="font-size:.8rem;font-weight:600;color:#374151;" class="d-none d-sm-inline" id="slimTopbarTitle">SisTech</span>
+		<span style="font-size:.8rem;font-weight:600;color:#374151;" class="d-none d-sm-inline" id="slimTopbarTitle">ProviderOne Sentinel - TREINANDO PESSOAS, FORTALEÇENDO A SEGURANÇA</span>
 		<div class="ms-auto d-flex align-items-center gap-2">
 			<button class="layout-toggle-btn" onclick="toggleLayout()" title="Voltar ao navbar no topo">
 				<i class="bi bi-layout-three-columns"></i>
@@ -171,8 +172,9 @@
 								<li><a class="dropdown-item" href="/security/phishing/relatorios"><i class="bi bi-bar-chart me-2 text-warning"></i>Relatórios</a></li>
 								<li><hr class="dropdown-divider"></li>
 								<li><a class="dropdown-item" href="/security/phishing/config"><i class="bi bi-gear me-2 text-success"></i>Configuração SMTP</a></li>
+								<li><a class="dropdown-item" href="/security/phishing/educacional-config"><i class="bi bi-palette me-2 text-warning"></i>Pág. Educacional</a></li>
 							</ul>
-						</li>				
+						</li>
 					</ul>
 					<!-- Direita: ícones + usuário -->
 					<div class="d-flex align-items-center gap-2">
@@ -319,16 +321,34 @@
 
 <!-- MODAL: Confirmar exclusão -->
 <div class="modal fade" id="modalConfirmarExclusao" tabindex="-1">
-	<div class="modal-dialog modal-sm modal-dialog-centered">
+	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
-			<div class="modal-body text-center p-4">
-				<i class="bi bi-exclamation-triangle text-danger fs-1"></i>
-				<p class="mt-2">Confirmar exclusão desta campanha?</p>
-				<p class="text-danger small" id="nomeCampanhaExcluir"></p>
+			<div class="modal-header border-0 pb-0">
+				<h6 class="modal-title text-danger fw-bold"><i class="bi bi-trash3-fill me-2"></i>Excluir Campanha</h6>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
-			<div class="modal-footer justify-content-center border-0 pt-0">
-				<button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-				<button class="btn btn-danger btn-sm" onclick="confirmarExclusaoCampanha()">Excluir</button>
+			<div class="modal-body pt-2">
+				<div class="text-center mb-3">
+					<div class="rounded-circle d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 mb-3"
+						style="width:64px;height:64px">
+						<i class="bi bi-exclamation-triangle-fill text-danger" style="font-size:1.8rem"></i>
+					</div>
+					<p class="mb-1 text-muted small">Você está prestes a excluir a campanha:</p>
+					<p class="fw-bold fs-6 mb-2" id="nomeCampanhaExcluir"></p>
+					<span id="badgeStatusExcluir" class="badge"></span>
+				</div>
+				<div id="avisoExclusaoComDados" class="alert alert-warning py-2 d-none small">
+					<i class="bi bi-exclamation-triangle-fill me-1"></i>
+					Esta campanha possui alvos e histórico de envios. Todos os dados serão
+					<strong>permanentemente removidos</strong>.
+				</div>
+				<p class="text-center text-muted small mb-0">Esta ação <strong>não pode ser desfeita</strong>.</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button class="btn btn-danger" id="btnConfirmarExclusao" onclick="confirmarExclusaoCampanha()">
+					<i class="bi bi-trash3 me-1"></i>Excluir
+				</button>
 			</div>
 		</div>
 	</div>
@@ -433,7 +453,7 @@
 							<a class="btn btn-outline-primary" href="/security/phishing/relatorios?campanha=${c.id}" title="Ver relatório"><i class="bi bi-bar-chart"></i></a>
 							${podeEditar ? `<button class="btn btn-outline-secondary" onclick="abrirModalEdicao(${c.id})" title="Editar"><i class="bi bi-pencil"></i></button>` : ''}
 							${podeDisparar ? `<button class="btn btn-outline-success" onclick="abrirModalDisparo(${c.id}, '${escapeHtml(c.nome).replace(/'/g, "\\'")}')" title="Disparar"><i class="bi bi-send"></i></button>` : ''}
-							${podeEditar ? `<button class="btn btn-outline-danger" onclick="abrirModalExclusao(${c.id}, '${escapeHtml(c.nome).replace(/'/g, "\\'")}')" title="Excluir"><i class="bi bi-trash"></i></button>` : ''}
+							<button class="btn btn-outline-danger" onclick="abrirModalExclusao(${c.id}, '${escapeHtml(c.nome).replace(/'/g, "\\'")}', '${c.status}')" title="Excluir"><i class="bi bi-trash3"></i></button>
 						</div>
 					</td>
 				</tr>
@@ -532,17 +552,71 @@
 			.catch(e => alert(e.message));
 	}
 
-	function abrirModalExclusao(id, nome) {
+	function abrirModalExclusao(id, nome, status) {
 		campanhaExcluirId = id;
 		document.getElementById('nomeCampanhaExcluir').textContent = nome;
+
+		const badge = document.getElementById('badgeStatusExcluir');
+		badge.textContent = STATUS_LABEL[status] || status;
+		badge.className = 'badge ' + (STATUS_BADGE[status] || 'bg-secondary');
+
+		const aviso = document.getElementById('avisoExclusaoComDados');
+		if (status !== 'RASCUNHO') aviso.classList.remove('d-none');
+		else aviso.classList.add('d-none');
+
+		const btn = document.getElementById('btnConfirmarExclusao');
+		btn.disabled = false;
+		btn.innerHTML = '<i class="bi bi-trash3 me-1"></i>Excluir';
+
 		modalExclusao.show();
 	}
 
 	function confirmarExclusaoCampanha() {
 		if (!campanhaExcluirId) return;
+		const btn = document.getElementById('btnConfirmarExclusao');
+		btn.disabled = true;
+		btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span>Excluindo...';
+
 		fetch(`/security/api/phishing/campanhas/${campanhaExcluirId}`, { method: 'DELETE' })
-			.then(r => { if (!r.ok && r.status !== 204) throw new Error('Erro ao excluir'); modalExclusao.hide(); carregarCampanhas(); })
-			.catch(e => alert(e.message));
+			.then(r => {
+				if (!r.ok && r.status !== 204) throw new Error('Erro ao excluir a campanha.');
+				modalExclusao.hide();
+				carregarCampanhas();
+				mostrarToast('Campanha excluída com sucesso.', 'success');
+			})
+			.catch(e => mostrarToast(e.message, 'danger'))
+			.finally(() => {
+				btn.disabled = false;
+				btn.innerHTML = '<i class="bi bi-trash3 me-1"></i>Excluir';
+			});
+	}
+
+	function mostrarToast(mensagem, tipo) {
+		const cfg = {
+			success: { bg: '#f0fdf4', border: '#bbf7d0', color: '#16a34a', icon: 'bi-check-circle-fill' },
+			danger:  { bg: '#fef2f2', border: '#fecaca', color: '#dc2626', icon: 'bi-x-circle-fill'     },
+			warning: { bg: '#fff7ed', border: '#fed7aa', color: '#ea580c', icon: 'bi-exclamation-triangle-fill' }
+		};
+		const c = cfg[tipo] || cfg.warning;
+		const el = document.createElement('div');
+		el.className = 'toast show mb-2';
+		el.setAttribute('role', 'alert');
+		el.style.cssText = `background:${c.bg};border:1.5px solid ${c.border};border-radius:12px;min-width:280px;max-width:340px;box-shadow:0 4px 16px rgba(0,0,0,.1);`;
+		el.innerHTML = `<div class="d-flex align-items-start gap-2 p-3" style="color:${c.color}">
+			<i class="bi ${c.icon} fs-5 flex-shrink-0 mt-1"></i>
+			<span class="me-auto" style="font-size:.87rem;line-height:1.45;">${mensagem}</span>
+			<button class="btn-close ms-1 mt-1" style="font-size:.65rem;opacity:.5;" onclick="this.closest('.toast').remove()"></button>
+		</div>`;
+		let container = document.getElementById('toastContainer');
+		if (!container) {
+			container = document.createElement('div');
+			container.id = 'toastContainer';
+			container.className = 'toast-container position-fixed top-0 end-0 p-3';
+			container.style.zIndex = '9999';
+			document.body.appendChild(container);
+		}
+		container.appendChild(el);
+		setTimeout(() => { if (el.parentNode) el.remove(); }, 5000);
 	}
 
 	function formatarData(iso) {

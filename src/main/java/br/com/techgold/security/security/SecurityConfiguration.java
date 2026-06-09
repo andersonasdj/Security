@@ -33,6 +33,7 @@ public class SecurityConfiguration {
 	        .authorizeHttpRequests(auth -> auth
 	            .requestMatchers("/templates/**", "/assets/**").permitAll()
 	            .requestMatchers("/phishing/click/**", "/phishing/phishingEducacional.html").permitAll()
+            .requestMatchers("/api/phishing/pagina-config/ativa").permitAll()
 	            .requestMatchers("/2fa", "/2fa/**", "/verify-2fa").hasAuthority("PRE_2FA")
 	            .requestMatchers(HttpMethod.POST, "/login", "/create").permitAll()
 	            .requestMatchers(HttpMethod.GET, "/create").permitAll()
